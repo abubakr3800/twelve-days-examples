@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Student Implementation</title>
+    <style>
+        /* Basic styling to get started */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Add your custom styles here */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager Implementation</h1>
+        
+        <!-- Instructions Section -->
+        <section class="instructions">
+            <h2>Implementation Instructions</h2>
+            <p>Your task is to implement a Task Manager application that demonstrates asynchronous JavaScript concepts. Follow these steps:</p>
+            
+            <ol>
+                <li>Implement the Task class with required properties</li>
+                <li>Create the StorageService for handling localStorage operations</li>
+                <li>Build the TaskManager class for task operations</li>
+                <li>Implement the UI components and event handlers</li>
+                <li>Add error handling and loading states</li>
+            </ol>
+
+            <h3>Required Features:</h3>
+            <ul>
+                <li>Add new tasks</li>
+                <li>Update task status</li>
+                <li>Delete tasks</li>
+                <li>Filter tasks by status and priority</li>
+                <li>Sort tasks by different criteria</li>
+                <li>Persist data using localStorage</li>
+            </ul>
+        </section>
+
+        <!-- Task Form -->
+        <div class="task-form">
+            <h2>Add New Task</h2>
+            <form id="taskForm">
+                <!-- TODO: Implement form fields -->
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date</label>
+                    <input type="datetime-local" id="dueDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <select id="priority" required>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <!-- TODO: Implement filter controls -->
+            <select id="statusFilter">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+            </select>
+            <select id="priorityFilter">
+                <option value="all">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            <select id="sortBy">
+                <option value="dueDate">Sort by Due Date</option>
+                <option value="priority">Sort by Priority</option>
+                <option value="createdAt">Sort by Created Date</option>
+            </select>
+        </div>
+
+        <!-- Task List -->
+        <div class="task-list">
+            <h2>Tasks</h2>
+            <div id="taskList">
+                <!-- TODO: Implement task list display -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TODO: Implement Task class
+        class Task {
+            constructor(title, description, dueDate, priority) {
+                // TODO: Add required properties
+                this.id = Date.now();
+                this.title = title;
+                this.description = description;
+                this.dueDate = new Date(dueDate);
+                this.priority = priority;
+                this.status = 'pending';
+                this.createdAt = new Date();
+            }
+
+            // TODO: Add any required methods
+        }
+
+        // TODO: Implement StorageService class
+        class StorageService {
+            constructor() {
+                this.storageKey = 'tasks';
+            }
+
+            async saveTasks(tasks) {
+                // TODO: Implement save tasks to localStorage
+                // Hint: Use Promise to handle async operation
+            }
+
+            async loadTasks() {
+                // TODO: Implement load tasks from localStorage
+                // Hint: Use Promise to handle async operation
+            }
+        }
+
+        // TODO: Implement TaskManager class
+        class TaskManager {
+            constructor() {
+                this.tasks = [];
+                this.storageService = new StorageService();
+            }
+
+            async addTask(task) {
+                // TODO: Implement add task
+                // Hint: Use async/await
+            }
+
+            async updateTaskStatus(taskId, status) {
+                // TODO: Implement update task status
+                // Hint: Use async/await
+            }
+
+            async deleteTask(taskId) {
+                // TODO: Implement delete task
+                // Hint: Use async/await
+            }
+
+            async filterTasks(status, priority) {
+                // TODO: Implement filter tasks
+                // Hint: Return filtered tasks based on status and priority
+            }
+
+            async sortTasks(sortBy) {
+                // TODO: Implement sort tasks
+                // Hint: Sort tasks based on the given criteria
+            }
+        }
+
+        // TODO: Implement UI updates and event handlers
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize task manager
+            const taskManager = new TaskManager();
+
+            // TODO: Implement form submission handler
+            document.getElementById('taskForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                // TODO: Handle form submission
+                // Hint: Create new task and add it to the manager
+            });
+
+            // TODO: Implement filter change handlers
+            document.getElementById('statusFilter').addEventListener('change', async (e) => {
+                // TODO: Handle status filter change
+                // Hint: Update task list based on selected status
+            });
+
+            document.getElementById('priorityFilter').addEventListener('change', async (e) => {
+                // TODO: Handle priority filter change
+                // Hint: Update task list based on selected priority
+            });
+
+            document.getElementById('sortBy').addEventListener('change', async (e) => {
+                // TODO: Handle sort change
+                // Hint: Update task list based on selected sort criteria
+            });
+        });
+
+        // TODO: Implement helper functions
+        function showError(message) {
+            // TODO: Implement error display
+            // Hint: Create and show error message element
+        }
+
+        function showSuccess(message) {
+            // TODO: Implement success message display
+            // Hint: Create and show success message element
+        }
+
+        function updateTaskList(tasks) {
+            // TODO: Implement task list update
+            // Hint: Create and update task elements in the list
+        }
+    </script>
+</body>
+</html> 

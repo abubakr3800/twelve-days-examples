@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Modern JavaScript Features</title>
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        /* Container for content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Section styling */
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Typography */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Form styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        /* Button styling */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Task list styling */
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-item.completed {
+            opacity: 0.7;
+        }
+
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Status colors */
+        .error {
+            color: var(--error-color);
+        }
+
+        .success {
+            color: var(--secondary-color);
+        }
+
+        .warning {
+            color: var(--warning-color);
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error and success messages */
+        .message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            background-color: #fde8e8;
+            color: var(--error-color);
+        }
+
+        .success-message {
+            background-color: #e8f8e8;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager - Modern JavaScript Features</h1>
+
+        <!-- Implementation Instructions -->
+        <section class="section">
+            <h2>Implementation Instructions</h2>
+            <ol>
+                <li>Create a TaskManager class using modern JavaScript features</li>
+                <li>Implement proper data management using modern array methods</li>
+                <li>Create reusable UI components using modern JavaScript</li>
+                <li>Implement proper error handling and performance optimization</li>
+                <li>Add bonus features for enhanced functionality</li>
+            </ol>
+        </section>
+
+        <!-- Add New Task Form -->
+        <section class="section">
+            <h2>Add New Task</h2>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date</label>
+                    <input type="date" id="dueDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <select id="priority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <button type="submit">Add Task</button>
+            </form>
+        </section>
+
+        <!-- Task List Section -->
+        <section class="section">
+            <h2>Task List</h2>
+            <div id="loading" class="loading" style="display: none;"></div>
+            <div id="error" class="message error-message" style="display: none;"></div>
+            <div id="success" class="message success-message" style="display: none;"></div>
+            <ul id="taskList" class="task-list"></ul>
+        </section>
+    </div>
+
+    <script>
+        // TODO: Implement TaskManager class using modern JavaScript features
+        class TaskManager {
+            constructor() {
+                this.tasks = [];
+                this.observers = [];
+            }
+
+            // TODO: Implement task management methods using modern array methods
+            addTask(task) {
+                // TODO: Implement using spread operator and array methods
+            }
+
+            removeTask(taskId) {
+                // TODO: Implement using array methods
+            }
+
+            updateTask(taskId, updates) {
+                // TODO: Implement using array methods and object spread
+            }
+
+            getTasks() {
+                // TODO: Implement using array methods
+            }
+
+            // TODO: Implement observer pattern using modern JavaScript features
+            subscribe(observer) {
+                // TODO: Implement using array methods
+            }
+
+            unsubscribe(observer) {
+                // TODO: Implement using array methods
+            }
+
+            notify() {
+                // TODO: Implement using array methods
+            }
+        }
+
+        // TODO: Implement UIManager class using modern JavaScript features
+        class UIManager {
+            constructor(taskManager) {
+                this.taskManager = taskManager;
+                this.taskForm = document.getElementById('taskForm');
+                this.taskList = document.getElementById('taskList');
+                this.loading = document.getElementById('loading');
+                this.error = document.getElementById('error');
+                this.success = document.getElementById('success');
+            }
+
+            // TODO: Implement UI methods using modern JavaScript features
+            renderTasks() {
+                // TODO: Implement using template literals and array methods
+            }
+
+            showError(message) {
+                // TODO: Implement using template literals
+            }
+
+            showSuccess(message) {
+                // TODO: Implement using template literals
+            }
+
+            showLoading() {
+                // TODO: Implement using modern DOM methods
+            }
+
+            hideLoading() {
+                // TODO: Implement using modern DOM methods
+            }
+        }
+
+        // TODO: Implement event handlers using modern JavaScript features
+        document.addEventListener('DOMContentLoaded', () => {
+            const taskManager = new TaskManager();
+            const uiManager = new UIManager(taskManager);
+
+            // TODO: Implement form submission handler using modern JavaScript features
+            document.getElementById('taskForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                // TODO: Implement using modern JavaScript features
+            });
+
+            // TODO: Implement task list event delegation using modern JavaScript features
+            document.getElementById('taskList').addEventListener('click', (e) => {
+                // TODO: Implement using modern JavaScript features
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 7 - Modern JavaScript (ES6+) Examples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+        #taskList {
+            list-style-type: none;
+            padding: 0;
+        }
+        #taskList li {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #ecf0f1;
+            border-radius: 3px;
+        }
+        #shoppingCart {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Day 7 - Modern JavaScript (ES6+) Examples</h1>
+
+    <!-- ===== ES6+ SYNTAX ===== -->
+    <section id="es6-syntax">
+        <h2>ES6+ Syntax Features</h2>
+        
+        <h3>Arrow Functions</h3>
+        <pre>// Traditional function
+function add(a, b) { return a + b; }
+
+// Arrow function
+const add = (a, b) => a + b;</pre>
+        <button onclick="demoArrowFunctions()">Test Arrow Functions</button>
+        <p id="arrowResult"></p>
+
+        <h3>Destructuring</h3>
+        <pre>// Object destructuring
+const user = { name: 'Alice', age: 30 };
+const { name, age } = user;
+
+// Array destructuring
+const colors = ['red', 'green', 'blue'];
+const [first, second] = colors;</pre>
+        <button onclick="demoDestructuring()">Test Destructuring</button>
+        <p id="destructuringResult"></p>
+
+        <h3>Template Literals</h3>
+        <pre>const name = 'Bob';
+const age = 25;
+console.log(`Hello ${name}! You are ${age} years old.`);</pre>
+        <button onclick="demoTemplateLiterals()">Test Template Literals</button>
+        <p id="templateResult"></p>
+    </section>
+
+    <!-- ===== MODULES & CLASSES ===== -->
+    <section id="modules-classes">
+        <h2>Modules & Classes</h2>
+        
+        <h3>ES6 Classes</h3>
+        <pre>class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    speak() {
+        return `${this.name} makes a noise.`;
+    }
+}
+
+class Dog extends Animal {
+    speak() {
+        return `${this.name} barks.`;
+    }
+}</pre>
+        <button onclick="demoClasses()">Test Classes</button>
+        <p id="classResult"></p>
+
+        <h3>Modules (check console for output)</h3>
+        <pre>// In math.js:
+export const add = (a, b) => a + b;
+export const multiply = (a, b) => a * b;
+
+// In app.js:
+import { add, multiply } from './math.js';</pre>
+        <button onclick="importModule()">Test Module Import</button>
+    </section>
+
+    <!-- ===== ARRAY METHODS ===== -->
+    <section id="array-methods">
+        <h2>Advanced Array Methods</h2>
+        
+        <h3>map/filter/reduce</h3>
+        <pre>const numbers = [1, 2, 3, 4, 5];
+
+// map: transform each item
+const squared = numbers.map(n => n * n);
+
+// filter: select items
+const evens = numbers.filter(n => n % 2 === 0);
+
+// reduce: accumulate values
+const sum = numbers.reduce((total, n) => total + n, 0);</pre>
+        <button onclick="demoArrayMethods()">Test Array Methods</button>
+        <div id="arrayResults"></div>
+
+        <h3>find/findIndex/some/every</h3>
+        <pre>const users = [
+    { id: 1, name: 'Alice', active: true },
+    { id: 2, name: 'Bob', active: false }
+];
+
+// find: first matching item
+const activeUser = users.find(user => user.active);
+
+// some: any items match?
+const hasActive = users.some(user => user.active);
+
+// every: all items match?
+const allActive = users.every(user => user.active);</pre>
+        <button onclick="demoArraySearchMethods()">Test Search Methods</button>
+        <div id="arraySearchResults"></div>
+    </section>
+
+    <!-- ===== SHOPPING CART PROJECT ===== -->
+    <section id="shopping-cart">
+        <h2>Shopping Cart Project</h2>
+        
+        <div>
+            <input type="text" id="itemName" placeholder="Item name">
+            <input type="number" id="itemPrice" placeholder="Price" min="0" step="0.01">
+            <button onclick="addToCart()">Add to Cart</button>
+        </div>
+        
+        <div id="shoppingCart">
+            <h3>Your Cart</h3>
+            <ul id="cartItems"></ul>
+            <p>Total: $<span id="cartTotal">0.00</span></p>
+            <button onclick="applyDiscount()">Apply 10% Discount</button>
+            <button onclick="clearCart()">Clear Cart</button>
+        </div>
+    </section>
+
+    <script type="module">
+        // Module example - these functions are exported from a "virtual" module
+        export const add = (a, b) => a + b;
+        export const multiply = (a, b) => a * b;
+    </script>
+
+    <script>
+        // ===== ES6+ SYNTAX DEMOS =====
+        function demoArrowFunctions() {
+            // Traditional function
+            function traditionalAdd(a, b) { return a + b; }
+            
+            // Arrow function
+            const arrowAdd = (a, b) => a + b;
+            
+            document.getElementById('arrowResult').textContent = 
+                `Traditional: 2 + 3 = ${traditionalAdd(2, 3)} | Arrow: 2 + 3 = ${arrowAdd(2, 3)}`;
+        }
+
+        function demoDestructuring() {
+            // Object destructuring
+            const user = { name: 'Alice', age: 30 };
+            const { name, age } = user;
+            
+            // Array destructuring
+            const colors = ['red', 'green', 'blue'];
+            const [first, second] = colors;
+            
+            document.getElementById('destructuringResult').textContent = 
+                `User: ${name}, ${age} years | Colors: ${first}, ${second}`;
+        }
+
+        function demoTemplateLiterals() {
+            const name = 'Bob';
+            const age = 25;
+            const message = `Hello ${name}! You are ${age} years old.`;
+            document.getElementById('templateResult').textContent = message;
+        }
+
+        // ===== CLASSES DEMO =====
+        function demoClasses() {
+            class Animal {
+                constructor(name) {
+                    this.name = name;
+                }
+                
+                speak() {
+                    return `${this.name} makes a noise.`;
+                }
+            }
+
+            class Dog extends Animal {
+                speak() {
+                    return `${this.name} barks.`;
+                }
+            }
+            
+            const animal = new Animal('Generic Animal');
+            const dog = new Dog('Rex');
+            
+            document.getElementById('classResult').textContent = 
+                `${animal.speak()} ${dog.speak()}`;
+        }
+
+        // ===== MODULE DEMO =====
+        async function importModule() {
+            // Normally you would import from another file
+            // This is just for demonstration
+            const module = await import("data:text/javascript,export const add=(a,b)=>a+b;export const multiply=(a,b)=>a*b;");
+            console.log('Module add(2, 3):', module.add(2, 3));
+            console.log('Module multiply(2, 3):', module.multiply(2, 3));
+            alert('Check console for module output!');
+        }
+
+        // ===== ARRAY METHODS DEMOS =====
+        function demoArrayMethods() {
+            const numbers = [1, 2, 3, 4, 5];
+            
+            // map: transform each item
+            const squared = numbers.map(n => n * n);
+            
+            // filter: select items
+            const evens = numbers.filter(n => n % 2 === 0);
+            
+            // reduce: accumulate values
+            const sum = numbers.reduce((total, n) => total + n, 0);
+            
+            document.getElementById('arrayResults').innerHTML = `
+                <p>Original: [${numbers.join(', ')}]</p>
+                <p>Squared: [${squared.join(', ')}]</p>
+                <p>Evens: [${evens.join(', ')}]</p>
+                <p>Sum: ${sum}</p>
+            `;
+        }
+
+        function demoArraySearchMethods() {
+            const users = [
+                { id: 1, name: 'Alice', active: true },
+                { id: 2, name: 'Bob', active: false },
+                { id: 3, name: 'Charlie', active: true }
+            ];
+            
+            // find: first matching item
+            const activeUser = users.find(user => user.active);
+            
+            // findIndex: position of first match
+            const inactiveIndex = users.findIndex(user => !user.active);
+            
+            // some: any items match?
+            const hasActive = users.some(user => user.active);
+            
+            // every: all items match?
+            const allActive = users.every(user => user.active);
+            
+            document.getElementById('arraySearchResults').innerHTML = `
+                <p>First active user: ${activeUser.name}</p>
+                <p>First inactive at index: ${inactiveIndex}</p>
+                <p>Has active users: ${hasActive}</p>
+                <p>All users active: ${allActive}</p>
+            `;
+        }
+
+        // ===== SHOPPING CART =====
+        class ShoppingCart {
+            constructor() {
+                this.items = [];
+                this.discount = 0;
+            }
+            
+            addItem(name, price) {
+                this.items.push({ name, price });
+                this.updateDisplay();
+            }
+            
+            removeItem(index) {
+                this.items.splice(index, 1);
+                this.updateDisplay();
+            }
+            
+            applyDiscount(percent) {
+                this.discount = percent;
+                this.updateDisplay();
+            }
+            
+            clearCart() {
+                this.items = [];
+                this.discount = 0;
+                this.updateDisplay();
+            }
+            
+            getTotal() {
+                const subtotal = this.items.reduce((total, item) => total + item.price, 0);
+                return subtotal * (1 - this.discount / 100);
+            }
+            
+            updateDisplay() {
+                const cartItems = document.getElementById('cartItems');
+                const cartTotal = document.getElementById('cartTotal');
+                
+                cartItems.innerHTML = this.items.map((item, index) => `
+                    <li>
+                        ${item.name} - $${item.price.toFixed(2)}
+                        <button onclick="cart.removeItem(${index})">Remove</button>
+                    </li>
+                `).join('');
+                
+                cartTotal.textContent = this.getTotal().toFixed(2);
+                
+                if (this.discount > 0) {
+                    cartTotal.innerHTML += ` <small>(with ${this.discount}% discount)</small>`;
+                }
+            }
+        }
+
+        const cart = new ShoppingCart();
+
+        function addToCart() {
+            const name = document.getElementById('itemName').value;
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            
+            if (name && !isNaN(price) && price > 0) {
+                cart.addItem(name, price);
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemPrice').value = '';
+            } else {
+                alert('Please enter valid item name and price!');
+            }
+        }
+
+        function applyDiscount() {
+            cart.applyDiscount(10); // 10% discount
+        }
+
+        function clearCart() {
+            cart.clearCart();
+        }
+    </script>
+</body>
+</html>

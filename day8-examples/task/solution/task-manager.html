@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Solution</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .task-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .task-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .task-item {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .task-priority {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .priority-high {
+            background-color: #fde8e8;
+            color: var(--error-color);
+        }
+
+        .priority-medium {
+            background-color: #fef3c7;
+            color: var(--warning-color);
+        }
+
+        .priority-low {
+            background-color: #e8f5e9;
+            color: var(--secondary-color);
+        }
+
+        .task-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .status-pending {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .status-in-progress {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .status-completed {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: var(--error-color);
+            background: #fde8e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .success {
+            color: var(--secondary-color);
+            background: #e8f8e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .task-actions button {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .task-actions button.delete {
+            background-color: var(--error-color);
+        }
+
+        .task-actions button.delete:hover {
+            background-color: #c0392b;
+        }
+
+        .task-description {
+            margin: 10px 0;
+            color: #666;
+        }
+
+        .task-due-date {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .task-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager</h1>
+
+        <!-- Task Stats -->
+        <div class="task-stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalTasks">0</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="completedTasks">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="pendingTasks">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
+
+        <!-- Task Form -->
+        <div class="task-form">
+            <h2>Add New Task</h2>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date</label>
+                    <input type="datetime-local" id="dueDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <select id="priority" required>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <select id="statusFilter">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+            </select>
+            <select id="priorityFilter">
+                <option value="all">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            <select id="sortBy">
+                <option value="dueDate">Sort by Due Date</option>
+                <option value="priority">Sort by Priority</option>
+                <option value="createdAt">Sort by Created Date</option>
+            </select>
+        </div>
+
+        <!-- Task List -->
+        <div class="task-list">
+            <h2>Tasks</h2>
+            <div id="taskList"></div>
+        </div>
+    </div>
+
+    <script>
+        // Task class
+        class Task {
+            constructor(title, description, dueDate, priority) {
+                this.id = Date.now();
+                this.title = title;
+                this.description = description;
+                this.dueDate = new Date(dueDate);
+                this.priority = priority;
+                this.status = 'pending';
+                this.createdAt = new Date();
+            }
+
+            toJSON() {
+                return {
+                    ...this,
+                    dueDate: this.dueDate.toISOString(),
+                    createdAt: this.createdAt.toISOString()
+                };
+            }
+
+            static fromJSON(json) {
+                const task = new Task(
+                    json.title,
+                    json.description,
+                    json.dueDate,
+                    json.priority
+                );
+                task.id = json.id;
+                task.status = json.status;
+                task.createdAt = new Date(json.createdAt);
+                return task;
+            }
+        }
+
+        // StorageService class
+        class StorageService {
+            constructor() {
+                this.storageKey = 'tasks';
+            }
+
+            async saveTasks(tasks) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const tasksJSON = tasks.map(task => task.toJSON());
+                        localStorage.setItem(this.storageKey, JSON.stringify(tasksJSON));
+                        resolve();
+                    } catch (error) {
+                        reject(new Error('Failed to save tasks'));
+                    }
+                });
+            }
+
+            async loadTasks() {
+                return new Promise((resolve, reject) => {
+                    try {
+                        const tasksJSON = localStorage.getItem(this.storageKey);
+                        if (!tasksJSON) {
+                            resolve([]);
+                            return;
+                        }
+                        const tasks = JSON.parse(tasksJSON).map(json => Task.fromJSON(json));
+                        resolve(tasks);
+                    } catch (error) {
+                        reject(new Error('Failed to load tasks'));
+                    }
+                });
+            }
+        }
+
+        // TaskManager class
+        class TaskManager {
+            constructor() {
+                this.tasks = [];
+                this.storageService = new StorageService();
+                this.filteredTasks = [];
+            }
+
+            async initialize() {
+                try {
+                    this.tasks = await this.storageService.loadTasks();
+                    this.filteredTasks = [...this.tasks];
+                    this.updateUI();
+                } catch (error) {
+                    this.showError('Failed to load tasks');
+                }
+            }
+
+            async addTask(task) {
+                try {
+                    this.tasks.push(task);
+                    await this.storageService.saveTasks(this.tasks);
+                    this.filteredTasks = [...this.tasks];
+                    this.updateUI();
+                    this.showSuccess('Task added successfully');
+                } catch (error) {
+                    this.showError('Failed to add task');
+                }
+            }
+
+            async updateTaskStatus(taskId, status) {
+                try {
+                    const task = this.tasks.find(t => t.id === taskId);
+                    if (task) {
+                        task.status = status;
+                        await this.storageService.saveTasks(this.tasks);
+                        this.filteredTasks = [...this.tasks];
+                        this.updateUI();
+                        this.showSuccess('Task status updated');
+                    }
+                } catch (error) {
+                    this.showError('Failed to update task status');
+                }
+            }
+
+            async deleteTask(taskId) {
+                try {
+                    this.tasks = this.tasks.filter(t => t.id !== taskId);
+                    await this.storageService.saveTasks(this.tasks);
+                    this.filteredTasks = [...this.tasks];
+                    this.updateUI();
+                    this.showSuccess('Task deleted successfully');
+                } catch (error) {
+                    this.showError('Failed to delete task');
+                }
+            }
+
+            filterTasks(status, priority) {
+                this.filteredTasks = this.tasks.filter(task => {
+                    const statusMatch = status === 'all' || task.status === status;
+                    const priorityMatch = priority === 'all' || task.priority === priority;
+                    return statusMatch && priorityMatch;
+                });
+                this.updateUI();
+            }
+
+            sortTasks(sortBy) {
+                this.filteredTasks.sort((a, b) => {
+                    switch (sortBy) {
+                        case 'dueDate':
+                            return a.dueDate - b.dueDate;
+                        case 'priority':
+                            const priorityOrder = { high: 0, medium: 1, low: 2 };
+                            return priorityOrder[a.priority] - priorityOrder[b.priority];
+                        case 'createdAt':
+                            return a.createdAt - b.createdAt;
+                        default:
+                            return 0;
+                    }
+                });
+                this.updateUI();
+            }
+
+            updateUI() {
+                const taskList = document.getElementById('taskList');
+                taskList.innerHTML = '';
+
+                this.filteredTasks.forEach(task => {
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'task-item';
+                    taskElement.innerHTML = `
+                        <div class="task-header">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-priority priority-${task.priority}">${task.priority}</div>
+                        </div>
+                        <div class="task-description">${task.description}</div>
+                        <div class="task-due-date">Due: ${task.dueDate.toLocaleString()}</div>
+                        <div class="task-status status-${task.status}">${task.status}</div>
+                        <div class="task-actions">
+                            <button onclick="taskManager.updateTaskStatus(${task.id}, 'in-progress')"
+                                    ${task.status === 'in-progress' ? 'disabled' : ''}>
+                                Start
+                            </button>
+                            <button onclick="taskManager.updateTaskStatus(${task.id}, 'completed')"
+                                    ${task.status === 'completed' ? 'disabled' : ''}>
+                                Complete
+                            </button>
+                            <button class="delete" onclick="taskManager.deleteTask(${task.id})">
+                                Delete
+                            </button>
+                        </div>
+                    `;
+                    taskList.appendChild(taskElement);
+                });
+
+                // Update stats
+                document.getElementById('totalTasks').textContent = this.tasks.length;
+                document.getElementById('completedTasks').textContent = 
+                    this.tasks.filter(t => t.status === 'completed').length;
+                document.getElementById('pendingTasks').textContent = 
+                    this.tasks.filter(t => t.status === 'pending').length;
+            }
+
+            showError(message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = message;
+                document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.task-form'));
+                setTimeout(() => errorDiv.remove(), 3000);
+            }
+
+            showSuccess(message) {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'success';
+                successDiv.textContent = message;
+                document.querySelector('.container').insertBefore(successDiv, document.querySelector('.task-form'));
+                setTimeout(() => successDiv.remove(), 3000);
+            }
+        }
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', () => {
+            const taskManager = new TaskManager();
+            window.taskManager = taskManager; // Make it globally accessible for onclick handlers
+
+            // Initialize task manager
+            taskManager.initialize();
+
+            // Form submission handler
+            document.getElementById('taskForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+                const dueDate = document.getElementById('dueDate').value;
+                const priority = document.getElementById('priority').value;
+
+                const task = new Task(title, description, dueDate, priority);
+                await taskManager.addTask(task);
+
+                // Reset form
+                e.target.reset();
+            });
+
+            // Filter change handlers
+            document.getElementById('statusFilter').addEventListener('change', (e) => {
+                const status = e.target.value;
+                const priority = document.getElementById('priorityFilter').value;
+                taskManager.filterTasks(status, priority);
+            });
+
+            document.getElementById('priorityFilter').addEventListener('change', (e) => {
+                const priority = e.target.value;
+                const status = document.getElementById('statusFilter').value;
+                taskManager.filterTasks(status, priority);
+            });
+
+            document.getElementById('sortBy').addEventListener('change', (e) => {
+                taskManager.sortTasks(e.target.value);
+            });
+        });
+    </script>
+</body>
+</html> 

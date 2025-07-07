@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 6 - Modern JavaScript (ES6+)</title>
+    <style>
+        /* ======================
+           GENERAL STYLES 
+           ====================== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #2980b9;
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #16a085;
+            margin-top: 25px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .output-area {
+            background-color: #f1f8fe;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            min-height: 50px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .product-info {
+            flex-grow: 1;
+        }
+        
+        .product-info h4 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+        }
+        
+        .product-info p {
+            margin: 0;
+            color: #7f8c8d;
+        }
+        
+        .debug-section {
+            background-color: #fff3e0;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .success-message {
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <h1>Day 6: Modern JavaScript (ES6+)</h1>
+    
+    <!-- ===========================================
+         ES6+ SYNTAX
+         =========================================== -->
+    <section id="syntax-section">
+        <h2>1. ES6+ Syntax Features</h2>
+        
+        <div class="controls">
+            <button onclick="showLetConst()">let vs const</button>
+            <button onclick="showArrowFunctions()">Arrow Functions</button>
+            <button onclick="showDestructuring()">Destructuring</button>
+            <button onclick="showSpreadRest()">Spread/Rest</button>
+            <button onclick="showTemplateLiterals()">Template Literals</button>
+        </div>
+        
+        <div id="syntax-output" class="output-area"></div>
+    </section>
+
+    <!-- ===========================================
+         MODULES
+         =========================================== -->
+    <section id="modules-section">
+        <h2>2. JavaScript Modules</h2>
+        
+        <div class="controls">
+            <button onclick="importMathModule()">Import Math Module</button>
+            <button onclick="importGreetModule()">Import Greet Module</button>
+        </div>
+        
+        <div id="modules-output" class="output-area"></div>
+        
+        <p><strong>Module files:</strong></p>
+        <pre><code>// math.js
+export const add = (a, b) => a + b;
+export const PI = 3.14159;
+
+// greet.js
+export function greet(name) {
+    return `Hello, ${name}!`;
+}</code></pre>
+    </section>
+
+    <!-- ===========================================
+         CLASSES
+         =========================================== -->
+    <section id="classes-section">
+        <h2>3. Classes & Inheritance</h2>
+        
+        <div class="controls">
+            <button onclick="createProduct()">Create Product</button>
+            <button onclick="createBook()">Create Book</button>
+            <button onclick="showStaticMethod()">Static Method</button>
+        </div>
+        
+        <div id="classes-output" class="output-area"></div>
+    </section>
+
+    <!-- ===========================================
+         SHOPPING CART PROJECT
+         =========================================== -->
+    <section id="cart-section">
+        <h2>4. Shopping Cart Project</h2>
+        
+        <div class="controls">
+            <input type="text" id="product-name" placeholder="Product name">
+            <input type="number" id="product-price" placeholder="Price" min="0" step="0.01">
+            <button onclick="addToCart()">Add to Cart</button>
+        </div>
+        
+        <h3>Cart Items</h3>
+        <div id="cart-items" class="output-area">
+            <p>No items in cart</p>
+        </div>
+        
+        <div class="controls">
+            <button onclick="calculateTotal()">Calculate Total</button>
+            <button onclick="applyDiscount()">Apply 10% Discount</button>
+            <button onclick="clearCart()">Clear Cart</button>
+        </div>
+        
+        <div id="cart-total" class="output-area"></div>
+    </section>
+
+    <!-- ===========================================
+         DEBUGGING EXERCISES
+         =========================================== -->
+    <section class="debug-section" id="debug-section">
+        <h2>5. Debugging Exercises</h2>
+        
+        <h3>Exercise 1: Fix the Class Definition</h3>
+        <button onclick="debugClass()">Run Class Test</button>
+        <div id="debug-output-1" class="output-area"></div>
+        
+        <h3>Exercise 2: Fix the Module Import</h3>
+        <button onclick="debugModule()">Run Module Test</button>
+        <div id="debug-output-2" class="output-area"></div>
+        
+        <h3>Exercise 3: Fix the Destructuring</h3>
+        <button onclick="debugDestructuring()">Run Destructuring</button>
+        <div id="debug-output-3" class="output-area"></div>
+    </section>
+
+    <script type="module">
+        // Import modules
+        import { add, PI } from './math.js';
+        import { greet } from './greet.js';
+        
+        // Make functions available globally for buttons
+        window.importMathModule = function() {
+            const output = document.getElementById('modules-output');
+            output.innerHTML = `
+                <p>Imported from math.js:</p>
+                <p>2 + 3 = ${add(2, 3)}</p>
+                <p>PI = ${PI}</p>
+            `;
+        };
+        
+        window.importGreetModule = function() {
+            const output = document.getElementById('modules-output');
+            output.innerHTML = `
+                <p>Imported from greet.js:</p>
+                <p>${greet('Alice')}</p>
+                <p>${greet('Bob')}</p>
+            `;
+        };
+    </script>
+
+    <script>
+        // ===========================================
+        // 1. ES6+ SYNTAX FEATURES
+        // ===========================================
+        function showLetConst() {
+            let letVariable = 10;
+            const constVariable = 20;
+            
+            letVariable = 30; // Allowed
+            // constVariable = 40; // Would cause error
+            
+            document.getElementById('syntax-output').innerHTML = `
+                <p><strong>let:</strong> Can be reassigned (${letVariable})</p>
+                <p><strong>const:</strong> Cannot be reassigned (${constVariable})</p>
+                <p class="success-message">Best practice: Use const by default, use let only when rebinding is needed</p>
+            `;
+        }
+        
+        function showArrowFunctions() {
+            // Traditional function
+            function multiply(a, b) {
+                return a * b;
+            }
+            
+            // Arrow function
+            const divide = (a, b) => a / b;
+            
+            document.getElementById('syntax-output').innerHTML = `
+                <p><strong>Traditional:</strong> multiply(5, 4) = ${multiply(5, 4)}</p>
+                <p><strong>Arrow:</strong> divide(10, 2) = ${divide(10, 2)}</p>
+                <p class="success-message">Arrow functions are shorter and don't rebind 'this'</p>
+            `;
+        }
+        
+        function showDestructuring() {
+            // Object destructuring
+            const person = { name: 'Alice', age: 25, job: 'Developer' };
+            const { name, age } = person;
+            
+            // Array destructuring
+            const colors = ['red', 'green', 'blue'];
+            const [firstColor, , thirdColor] = colors;
+            
+            document.getElementById('syntax-output').innerHTML = `
+                <p><strong>Object Destructuring:</strong></p>
+                <p>Extracted: ${name}, ${age}</p>
+                
+                <p><strong>Array Destructuring:</strong></p>
+                <p>First color: ${firstColor}, Third color: ${thirdColor}</p>
+            `;
+        }
+        
+        function showSpreadRest() {
+            // Spread operator
+            const arr1 = [1, 2, 3];
+            const arr2 = [4, 5, 6];
+            const combined = [...arr1, ...arr2];
+            
+            // Rest parameters
+            function sum(...numbers) {
+                return numbers.reduce((total, num) => total + num, 0);
+            }
+            
+            document.getElementById('syntax-output').innerHTML = `
+                <p><strong>Spread Operator:</strong></p>
+                <p>Combined arrays: [${combined.join(', ')}]</p>
+                
+                <p><strong>Rest Parameters:</strong></p>
+                <p>sum(1, 2, 3, 4) = ${sum(1, 2, 3, 4)}</p>
+            `;
+        }
+        
+        function showTemplateLiterals() {
+            const name = 'Alice';
+            const age = 25;
+            const multiline = `
+                This is a template literal
+                that spans multiple lines
+                and includes variables: ${name}, ${age}
+            `;
+            
+            document.getElementById('syntax-output').innerHTML = `
+                <p><strong>Template Literal:</strong></p>
+                <p>Hello, ${name}! You are ${age} years old.</p>
+                <p>Next year you'll be ${age + 1}.</p>
+                
+                <p><strong>Multiline:</strong></p>
+                <pre>${multiline}</pre>
+            `;
+        }
+
+        // ===========================================
+        // 3. CLASSES & INHERITANCE
+        // ===========================================
+        class Product {
+            constructor(name, price) {
+                this.name = name;
+                this.price = price;
+            }
+            
+            getDescription() {
+                return `${this.name} - $${this.price.toFixed(2)}`;
+            }
+            
+            static comparePrices(productA, productB) {
+                return productA.price - productB.price;
+            }
+        }
+        
+        class Book extends Product {
+            constructor(name, price, author) {
+                super(name, price);
+                this.author = author;
+            }
+            
+            getDescription() {
+                return `${super.getDescription()} by ${this.author}`;
+            }
+        }
+        
+        window.createProduct = function() {
+            const output = document.getElementById('classes-output');
+            const product = new Product('Laptop', 999.99);
+            
+            output.innerHTML = `
+                <div class="product-card">
+                    <div class="product-info">
+                        <h4>${product.name}</h4>
+                        <p>${product.getDescription()}</p>
+                    </div>
+                </div>
+                <p class="success-message">Created Product instance using class</p>
+            `;
+        };
+        
+        window.createBook = function() {
+            const output = document.getElementById('classes-output');
+            const book = new Book('JavaScript Guide', 29.99, 'Jane Doe');
+            
+            output.innerHTML = `
+                <div class="product-card">
+                    <div class="product-info">
+                        <h4>${book.name}</h4>
+                        <p>${book.getDescription()}</p>
+                    </div>
+                </div>
+                <p class="success-message">Created Book instance that extends Product</p>
+            `;
+        };
+        
+        window.showStaticMethod = function() {
+            const output = document.getElementById('classes-output');
+            const product1 = new Product('Phone', 699.99);
+            const product2 = new Product('Tablet', 499.99);
+            
+            const comparison = Product.comparePrices(product1, product2);
+            
+            output.innerHTML = `
+                <p>${product1.getDescription()} vs ${product2.getDescription()}</p>
+                <p>Price difference: $${Math.abs(comparison).toFixed(2)}</p>
+                <p class="success-message">Called static method on Product class</p>
+            `;
+        };
+
+        // ===========================================
+        // 4. SHOPPING CART PROJECT
+        // ===========================================
+        class ShoppingCart {
+            constructor() {
+                this.items = [];
+            }
+            
+            addItem(name, price) {
+                this.items.push({ name, price });
+                this.render();
+            }
+            
+            calculateTotal() {
+                return this.items.reduce((total, item) => total + item.price, 0);
+            }
+            
+            applyDiscount(percent) {
+                const discount = this.calculateTotal() * (percent / 100);
+                return this.calculateTotal() - discount;
+            }
+            
+            clear() {
+                this.items = [];
+                this.render();
+            }
+            
+            render() {
+                const cartItems = document.getElementById('cart-items');
+                
+                if (this.items.length === 0) {
+                    cartItems.innerHTML = '<p>No items in cart</p>';
+                    return;
+                }
+                
+                let html = '';
+                this.items.forEach((item, index) => {
+                    html += `
+                        <div class="cart-item">
+                            <span>${item.name} - $${item.price.toFixed(2)}</span>
+                            <button onclick="cart.removeItem(${index})">Remove</button>
+                        </div>
+                    `;
+                });
+                
+                cartItems.innerHTML = html;
+            }
+            
+            removeItem(index) {
+                this.items.splice(index, 1);
+                this.render();
+            }
+        }
+        
+        const cart = new ShoppingCart();
+        
+        window.addToCart = function() {
+            const nameInput = document.getElementById('product-name');
+            const priceInput = document.getElementById('product-price');
+            
+            const name = nameInput.value.trim();
+            const price = parseFloat(priceInput.value);
+            
+            if (!name || isNaN(price) || price <= 0) {
+                alert('Please enter valid product name and price');
+                return;
+            }
+            
+            cart.addItem(name, price);
+            
+            // Clear inputs
+            nameInput.value = '';
+            priceInput.value = '';
+            nameInput.focus();
+        };
+        
+        window.calculateTotal = function() {
+            const total = cart.calculateTotal();
+            document.getElementById('cart-total').innerHTML = `
+                <p><strong>Total:</strong> $${total.toFixed(2)}</p>
+            `;
+        };
+        
+        window.applyDiscount = function() {
+            const discountedTotal = cart.applyDiscount(10);
+            document.getElementById('cart-total').innerHTML = `
+                <p><strong>Original Total:</strong> $${cart.calculateTotal().toFixed(2)}</p>
+                <p><strong>Discounted Total (10% off):</strong> $${discountedTotal.toFixed(2)}</p>
+            `;
+        };
+        
+        window.clearCart = function() {
+            cart.clear();
+            document.getElementById('cart-total').innerHTML = '';
+        };
+
+        // ===========================================
+        // 5. DEBUGGING EXERCISES
+        // ===========================================
+        window.debugClass = function() {
+            // Original broken version:
+            // class Animal {
+            //     constructor(name) {
+            //         name = name;
+            //     }
+            //     speak() {
+            //         console.log(`${name} makes a noise.`);
+            //     }
+            // }
+            
+            // Fixed version:
+            class Animal {
+                constructor(name) {
+                    this.name = name;
+                }
+                speak() {
+                    console.log(`${this.name} makes a noise.`);
+                }
+            }
+            
+            const output = document.getElementById('debug-output-1');
+            const dog = new Animal('Rex');
+            
+            output.innerHTML = `
+                <p><strong>Fixed Class:</strong></p>
+                <p>Created Animal named ${dog.name}</p>
+                <p>Check console for speak() output</p>
+                <p style="color:green">Fix: Added 'this' keyword to assign and access instance property</p>
+            `;
+            
+            dog.speak();
+        };
+        
+        window.debugModule = function() {
+            const output = document.getElementById('debug-output-2');
+            
+            // This would fail because the import needs to be at top level
+            // and the button click handler can't directly use import()
+            
+            // Solution is to use dynamic import
+            async function runModuleTest() {
+                try {
+                    const module = await import('./greet.js');
+                    output.innerHTML = `
+                        <p><strong>Dynamic Import:</strong></p>
+                        <p>${module.greet('Dynamic Import')}</p>
+                        <p style="color:green">Fix: Used dynamic import() syntax</p>
+                    `;
+                } catch (error) {
+                    output.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
+                }
+            }
+            
+            runModuleTest();
+        };
+        
+        window.debugDestructuring = function() {
+            const output = document.getElementById('debug-output-3');
+            
+            // Original broken version:
+            // const user = { firstName: 'John', lastName: 'Doe' };
+            // const { first, last } = user;
+            
+            // Fixed version:
+            const user = { firstName: 'John', lastName: 'Doe' };
+            const { firstName: first, lastName: last } = user;
+            
+            output.innerHTML = `
+                <p><strong>Fixed Destructuring:</strong></p>
+                <p>First: ${first}, Last: ${last}</p>
+                <p style="color:green">Fix: Used proper property aliasing in destructuring</p>
+            `;
+        };
+    </script>
+</body>
+</html>

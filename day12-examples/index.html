@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 12: Firebase Firestore & Final Project</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .interactive-demo {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+        }
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        .task-item.completed {
+            text-decoration: line-through;
+            color: #6c757d;
+            background-color: #e9ecef;
+        }
+        .firebase-section {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .auth-section {
+            background-color: #e7f5ff;
+            border-left: 4px solid #4dabf7;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .user-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #4dabf7;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        .deploy-section {
+            border: 1px dashed #0d6efd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">Day 12: Firebase & Final Project</a>
+            <div id="authStatus" class="ms-auto"></div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#firestore">Firestore</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#auth">Authentication</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#project">Final Project</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#deployment">Deployment</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-center mb-4">Firebase Firestore & Final Project</h1>
+        <p class="lead text-center mb-5">Build a real-time application with Firebase and deploy it live</p>
+
+        <!-- Firebase Initialization -->
+        <section class="mb-5">
+            <h2 class="mb-3">Firebase Setup</h2>
+            <div class="firebase-section">
+                <h4>Configuration</h4>
+                <div class="code-block">
+                    <pre>// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "your-app.firebaseapp.com",
+  projectId: "your-app",
+  storageBucket: "your-app.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abcdef1234567890"
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();</pre>
+                </div>
+                <div class="alert alert-warning mt-3">
+                    <strong>Note:</strong> Replace with your actual Firebase config from the Firebase Console.
+                </div>
+            </div>
+        </section>
+
+        <!-- Firestore Section -->
+        <section id="firestore" class="mb-5">
+            <h2 class="mb-3">Firestore CRUD Operations</h2>
+            <div class="alert alert-info">
+                <strong>Key Concept:</strong> Firestore is a NoSQL document database that syncs data in realtime.
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="mt-4">Basic Operations</h3>
+                    <div class="code-block">
+                        <pre>// Add a document
+db.collection('tasks').add({
+  text: 'Learn Firebase',
+  completed: false,
+  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+  userId: auth.currentUser?.uid
+});
+
+// Read documents (once)
+db.collection('tasks').get()
+  .then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      console.log(doc.id, '=>', doc.data());
+    });
+  });
+
+// Real-time listener
+db.collection('tasks')
+  .where('userId', '==', auth.currentUser?.uid)
+  .onSnapshot(querySnapshot => {
+    const tasks = [];
+    querySnapshot.forEach(doc => {
+      tasks.push({ id: doc.id, ...doc.data() });
+    });
+    renderTasks(tasks);
+  });
+
+// Update a document
+db.collection('tasks').doc(taskId).update({
+  completed: true
+});
+
+// Delete a document
+db.collection('tasks').doc(taskId).delete();</pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="interactive-demo">
+                        <h4>Firestore Task Manager</h4>
+                        <div id="firestoreLoginAlert" class="alert alert-warning">
+                            Please sign in to use the Firestore Task Manager.
+                        </div>
+                        <div id="firestoreDemo" style="display: none;">
+                            <div class="input-group mb-3">
+                                <input type="text" id="firestoreTaskInput" class="form-control" placeholder="Enter task">
+                                <button id="addFirestoreTaskBtn" class="btn btn-primary">Add Task</button>
+                            </div>
+                            <div id="firestoreTaskList">
+                                <!-- Tasks will be rendered here -->
+                            </div>
+                            <div class="mt-3">
+                                <button id="clearFirestoreTasksBtn" class="btn btn-danger">Clear Completed Tasks</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Authentication Section -->
+        <section id="auth" class="mb-5">
+            <h2 class="mb-3">Authentication</h2>
+            <div class="alert alert-info">
+                <strong>Key Concept:</strong> Firebase Authentication provides backend services to authenticate users.
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="mt-4">Email/Password Auth</h3>
+                    <div class="code-block">
+                        <pre>// Sign up with email/password
+auth.createUserWithEmailAndPassword(email, password)
+  .then(userCredential => {
+    console.log('User created:', userCredential.user);
+  })
+  .catch(error => {
+    console.error('Error:', error.message);
+  });
+
+// Sign in with email/password
+auth.signInWithEmailAndPassword(email, password)
+  .then(userCredential => {
+    console.log('User signed in:', userCredential.user);
+  });
+
+// Sign out
+auth.signOut()
+  .then(() => {
+    console.log('User signed out');
+  });
+
+// Auth state listener
+auth.onAuthStateChanged(user => {
+  if (user) {
+    console.log('User is signed in:', user.email);
+  } else {
+    console.log('User is signed out');
+  }
+});</pre>
+                    </div>
+
+                    <h3 class="mt-4">Google Sign-In</h3>
+                    <div class="code-block">
+                        <pre>// Google Sign-In
+const provider = new firebase.auth.GoogleAuthProvider();
+
+auth.signInWithPopup(provider)
+  .then(result => {
+    console.log('Google user:', result.user);
+  })
+  .catch(error => {
+    console.error('Error:', error.message);
+  });</pre>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="auth-section">
+                        <h4>Authentication Demo</h4>
+                        <div id="authDemo">
+                            <div id="signInForm" class="mb-4">
+                                <h5>Email/Password</h5>
+                                <div class="mb-3">
+                                    <input type="email" id="authEmail" class="form-control" placeholder="Email">
+                                </div>
+                                <div class="mb-3">
+                                    <input type="password" id="authPassword" class="form-control" placeholder="Password">
+                                </div>
+                                <div class="d-grid gap-2 d-md-block">
+                                    <button id="signUpBtn" class="btn btn-primary me-2">Sign Up</button>
+                                    <button id="signInBtn" class="btn btn-success me-2">Sign In</button>
+                                    <button id="signOutBtn" class="btn btn-danger" style="display: none;">Sign Out</button>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <h5>Or sign in with:</h5>
+                                <button id="googleSignInBtn" class="btn btn-outline-dark">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" height="20" class="me-2"> Google
+                                </button>
+                            </div>
+                            <div id="authError" class="alert alert-danger" style="display: none;"></div>
+                            <div id="authSuccess" class="alert alert-success" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Project Section -->
+        <section id="project" class="mb-5">
+            <h2 class="mb-3">Final Project</h2>
+            <div class="alert alert-info">
+                <strong>Key Concept:</strong> Combine all learned technologies into a complete application.
+            </div>
+
+            <h3 class="mt-4">Project Requirements</h3>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Task Manager with Firebase</h5>
+                    <ul>
+                        <li>User authentication (email/password or Google)</li>
+                        <li>Real-time Firestore database</li>
+                        <li>CRUD operations for tasks</li>
+                        <li>Responsive UI with Bootstrap</li>
+                        <li>Error handling and loading states</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="mt-4">Project Structure</h3>
+            <div class="code-block">
+                <pre>final-project/
+├── public/               # Static files
+│   ├── index.html        # Main HTML file
+│   ├── css/              # CSS files
+│   │   └── styles.css
+│   └── js/               # JavaScript files
+│       ├── firebase.js   # Firebase configuration
+│       ├── auth.js       # Authentication logic
+│       ├── database.js   # Firestore operations
+│       └── app.js        # Main application logic
+├── firebase.json         # Firebase config for hosting
+└── README.md             # Project documentation</pre>
+            </div>
+
+            <h3 class="mt-4">UI Improvements</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Loading Spinners</h5>
+                            <pre><code>&lt;div id="loadingSpinner" class="text-center"&gt;
+  &lt;div class="spinner-border" role="status"&gt;
+    &lt;span class="visually-hidden"&gt;Loading...&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Error Handling</h5>
+                            <pre><code>function showError(message) {
+  const errorElement = document.getElementById('errorAlert');
+  errorElement.textContent = message;
+  errorElement.style.display = 'block';
+  setTimeout(() => {
+    errorElement.style.display = 'none';
+  }, 5000);
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment Section -->
+        <section id="deployment" class="mb-5">
+            <h2 class="mb-3">Deployment</h2>
+            <div class="alert alert-info">
+                <strong>Key Concept:</strong> Deploy your application to make it accessible to the world.
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="mt-4">Firebase Hosting</h3>
+                    <div class="deploy-section">
+                        <ol>
+                            <li>Install Firebase CLI:
+                                <div class="code-block">
+                                    <pre>npm install -g firebase-tools</pre>
+                                </div>
+                            </li>
+                            <li>Login to Firebase:
+                                <div class="code-block">
+                                    <pre>firebase login</pre>
+                                </div>
+                            </li>
+                            <li>Initialize your project:
+                                <div class="code-block">
+                                    <pre>firebase init hosting</pre>
+                                </div>
+                            </li>
+                            <li>Deploy your app:
+                                <div class="code-block">
+                                    <pre>firebase deploy</pre>
+                                </div>
+                            </li>
+                        </ol>
+                        <p>Your app will be live at: <code>https://your-project-id.web.app</code></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="mt-4">Alternative: Netlify</h3>
+                    <div class="deploy-section">
+                        <ol>
+                            <li>Drag and drop your <code>public</code> folder to Netlify</li>
+                            <li>Or connect your GitHub repository</li>
+                            <li>Configure build settings (if needed):
+                                <div class="code-block">
+                                    <pre>Build command: npm run build
+Publish directory: public</pre>
+                                </div>
+                            </li>
+                            <li>Deploy!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Celebration Section -->
+        <section class="text-center py-5 bg-light rounded mb-5">
+            <h2 class="mb-3">🎉 Congratulations! 🎉</h2>
+            <p class="lead">You've completed the 12-day web development journey!</p>
+            <div class="mt-4">
+                <button id="demoFinalProjectBtn" class="btn btn-primary btn-lg me-3">View Final Project Demo</button>
+                <button id="deployProjectBtn" class="btn btn-success btn-lg">Deploy Your Project</button>
+            </div>
+        </section>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>Day 12: Firebase Firestore & Final Project</p>
+            <p>You're now ready to build and deploy your own web applications!</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Firebase configuration (replace with your actual config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyAPIKey1234567890",
+            authDomain: "your-project-id.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project-id.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef1234567890"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Authentication Demo
+        document.getElementById('signUpBtn').addEventListener('click', () => {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    showAuthSuccess('Account created successfully!');
+                })
+                .catch(error => {
+                    showAuthError(error.message);
+                });
+        });
+
+        document.getElementById('signInBtn').addEventListener('click', () => {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    showAuthSuccess('Signed in successfully!');
+                })
+                .catch(error => {
+                    showAuthError(error.message);
+                });
+        });
+
+        document.getElementById('googleSignInBtn').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            
+            auth.signInWithPopup(provider)
+                .then(() => {
+                    showAuthSuccess('Signed in with Google!');
+                })
+                .catch(error => {
+                    showAuthError(error.message);
+                });
+        });
+
+        document.getElementById('signOutBtn').addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    showAuthSuccess('Signed out successfully!');
+                });
+        });
+
+        function showAuthError(message) {
+            const errorElement = document.getElementById('authError');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            document.getElementById('authSuccess').style.display = 'none';
+        }
+
+        function showAuthSuccess(message) {
+            const successElement = document.getElementById('authSuccess');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+            document.getElementById('authError').style.display = 'none';
+        }
+
+        // Auth state listener
+        auth.onAuthStateChanged(user => {
+            const authStatus = document.getElementById('authStatus');
+            const signOutBtn = document.getElementById('signOutBtn');
+            const firestoreDemo = document.getElementById('firestoreDemo');
+            const firestoreLoginAlert = document.getElementById('firestoreLoginAlert');
+            
+            if (user) {
+                authStatus.innerHTML = `<span class="navbar-text">Signed in as <span class="user-badge">${user.email}</span></span>`;
+                signOutBtn.style.display = 'inline-block';
+                firestoreDemo.style.display = 'block';
+                firestoreLoginAlert.style.display = 'none';
+                loadFirestoreTasks();
+            } else {
+                authStatus.innerHTML = '';
+                signOutBtn.style.display = 'none';
+                firestoreDemo.style.display = 'none';
+                firestoreLoginAlert.style.display = 'block';
+            }
+        });
+
+        // Firestore Task Manager
+        function loadFirestoreTasks() {
+            const userId = auth.currentUser?.uid;
+            if (!userId) return;
+            
+            db.collection('tasks')
+                .where('userId', '==', userId)
+                .orderBy('createdAt', 'desc')
+                .onSnapshot(querySnapshot => {
+                    const tasks = [];
+                    querySnapshot.forEach(doc => {
+                        tasks.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderFirestoreTasks(tasks);
+                });
+        }
+
+        function renderFirestoreTasks(tasks) {
+            const taskList = document.getElementById('firestoreTaskList');
+            taskList.innerHTML = tasks.map(task => `
+                <div class="task-item ${task.completed ? 'completed' : ''}" data-id="${task.id}">
+                    <span>${task.text}</span>
+                    <div>
+                        <button class="btn btn-sm ${task.completed ? 'btn-warning' : 'btn-success'} toggle-btn">
+                            ${task.completed ? 'Undo' : 'Complete'}
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('addFirestoreTaskBtn').addEventListener('click', () => {
+            const input = document.getElementById('firestoreTaskInput');
+            const userId = auth.currentUser?.uid;
+            
+            if (input.value.trim() && userId) {
+                db.collection('tasks').add({
+                    text: input.value,
+                    completed: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    userId: userId
+                }).then(() => {
+                    input.value = '';
+                }).catch(error => {
+                    console.error('Error adding task:', error);
+                });
+            }
+        });
+
+        document.getElementById('firestoreTaskList').addEventListener('click', (e) => {
+            const taskElement = e.target.closest('.task-item');
+            if (!taskElement) return;
+            
+            const taskId = taskElement.dataset.id;
+            
+            if (e.target.classList.contains('toggle-btn')) {
+                const isCompleted = taskElement.classList.contains('completed');
+                db.collection('tasks').doc(taskId).update({
+                    completed: !isCompleted
+                }).catch(error => {
+                    console.error('Error updating task:', error);
+                });
+            }
+            
+            if (e.target.classList.contains('delete-btn')) {
+                db.collection('tasks').doc(taskId).delete()
+                    .catch(error => {
+                        console.error('Error deleting task:', error);
+                    });
+            }
+        });
+
+        document.getElementById('clearFirestoreTasksBtn').addEventListener('click', () => {
+            const userId = auth.currentUser?.uid;
+            if (!userId) return;
+            
+            if (confirm('Are you sure you want to delete all completed tasks?')) {
+                db.collection('tasks')
+                    .where('userId', '==', userId)
+                    .where('completed', '==', true)
+                    .get()
+                    .then(querySnapshot => {
+                        const batch = db.batch();
+                        querySnapshot.forEach(doc => {
+                            batch.delete(doc.ref);
+                        });
+                        return batch.commit();
+                    })
+                    .catch(error => {
+                        console.error('Error clearing tasks:', error);
+                    });
+            }
+        });
+
+        // Demo buttons
+        document.getElementById('demoFinalProjectBtn').addEventListener('click', () => {
+            alert('In a real implementation, this would show your complete final project!\n\nFor now, try the Firestore Task Manager above after signing in.');
+        });
+
+        document.getElementById('deployProjectBtn').addEventListener('click', () => {
+            alert('Follow the deployment instructions in the Deployment section to deploy your project!');
+        });
+    </script>
+</body>
+</html>

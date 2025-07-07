@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 4 - Arrays, Loops & Data Persistence</title>
+    <style>
+        /* ======================
+           GENERAL STYLES 
+           ====================== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #2980b9;
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #16a085;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        input, select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        
+        .task-item {
+            background-color: #f1f8fe;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .task-item:hover {
+            background-color: #e1f0fa;
+        }
+        
+        .task-item.completed {
+            background-color: #e8f8f5;
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+        
+        .priority-high {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .priority-medium {
+            border-left: 4px solid #f39c12;
+        }
+        
+        .priority-low {
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .task-actions button {
+            margin-left: 8px;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .debug-section {
+            background-color: #fff3e0;
+            border-left: 4px solid #e67e22;
+        }
+        
+        .storage-status {
+            font-size: 14px;
+            color: #27ae60;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .controls > * {
+            flex: 1 1 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Day 4: Arrays, Loops & Data Persistence</h1>
+    
+    <!-- ===========================================
+         ARRAY METHODS
+         =========================================== -->
+    <section id="array-section">
+        <h2>1. Array Methods</h2>
+        
+        <div class="controls">
+            <button onclick="showBasicArrayMethods()">Basic Methods</button>
+            <button onclick="showAdvancedArrayMethods()">Advanced Methods</button>
+        </div>
+        
+        <div id="array-output" class="output-area"></div>
+    </section>
+
+    <!-- ===========================================
+         LOOPS
+         =========================================== -->
+    <section id="loops-section">
+        <h2>2. Loops</h2>
+        
+        <div class="controls">
+            <button onclick="showForLoop()">For Loop</button>
+            <button onclick="showForOfLoop()">For...Of Loop</button>
+            <button onclick="showForInLoop()">For...In Loop</button>
+        </div>
+        
+        <div id="loops-output" class="output-area"></div>
+    </section>
+
+    <!-- ===========================================
+         TASK MANAGER WITH LOCALSTORAGE
+         =========================================== -->
+    <section id="task-manager-section">
+        <h2>3. Task Manager with localStorage</h2>
+        
+        <div class="controls">
+            <input type="text" id="new-task" placeholder="Task description">
+            <select id="task-priority">
+                <option value="high">High Priority</option>
+                <option value="medium" selected>Medium Priority</option>
+                <option value="low">Low Priority</option>
+            </select>
+            <select id="task-category">
+                <option value="work">Work</option>
+                <option value="personal">Personal</option>
+                <option value="shopping">Shopping</option>
+            </select>
+            <button onclick="addNewTask()">Add Task</button>
+        </div>
+        
+        <div class="controls">
+            <input type="text" id="search-task" placeholder="Search tasks..." oninput="filterTasks()">
+            <button onclick="clearCompleted()">Clear Completed</button>
+        </div>
+        
+        <div class="storage-status" id="storage-status">Loading tasks...</div>
+        
+        <ul class="task-list" id="task-list"></ul>
+    </section>
+
+    <!-- ===========================================
+         DEBUGGING EXERCISES
+         =========================================== -->
+    <section class="debug-section" id="debug-section">
+        <h2>4. Debugging Exercises</h2>
+        
+        <h3>Exercise 1: Fix the LocalStorage Reader</h3>
+        <button onclick="debugLocalStorage()">Run Storage Reader</button>
+        <div id="debug-output-1" class="output-area"></div>
+        
+        <h3>Exercise 2: Fix the Loop</h3>
+        <button onclick="debugLoop()">Run Loop</button>
+        <div id="debug-output-2" class="output-area"></div>
+        
+        <h3>Exercise 3: Fix the Task Filter</h3>
+        <button onclick="debugFilter()">Run Filter</button>
+        <div id="debug-output-3" class="output-area"></div>
+    </section>
+
+    <script>
+        // ===========================================
+        // 1. ARRAY METHODS
+        // ===========================================
+        const sampleArray = [10, 20, 30, 40, 50];
+        const userArray = [
+            { name: "Alice", age: 25 },
+            { name: "Bob", age: 30 },
+            { name: "Charlie", age: 22 }
+        ];
+        
+        function showBasicArrayMethods() {
+            let output = "<h3>Basic Array Methods</h3>";
+            
+            // Push/pop
+            const pushArray = [...sampleArray];
+            pushArray.push(60);
+            output += `<p>Push: [${pushArray}]</p>`;
+            
+            // Slice
+            output += `<p>Slice(1,3): [${sampleArray.slice(1, 3)}]</p>`;
+            
+            // Join
+            output += `<p>Join: "${sampleArray.join(' - ')}"</p>`;
+            
+            document.getElementById("array-output").innerHTML = output;
+        }
+        
+        function showAdvancedArrayMethods() {
+            let output = "<h3>Advanced Array Methods</h3>";
+            
+            // Map
+            const doubled = sampleArray.map(num => num * 2);
+            output += `<p>Map (double): [${doubled}]</p>`;
+            
+            // Filter
+            const evens = sampleArray.filter(num => num % 2 === 0);
+            output += `<p>Filter (evens): [${evens}]</p>`;
+            
+            // Reduce
+            const sum = sampleArray.reduce((total, num) => total + num, 0);
+            output += `<p>Reduce (sum): ${sum}</p>`;
+            
+            // Find
+            const found = userArray.find(user => user.age > 25);
+            output += `<p>Find (age > 25): ${found.name} (${found.age})</p>`;
+            
+            document.getElementById("array-output").innerHTML = output;
+        }
+
+        // ===========================================
+        // 2. LOOPS
+        // ===========================================
+        function showForLoop() {
+            let output = "<h3>For Loop</h3><ul>";
+            for (let i = 0; i < sampleArray.length; i++) {
+                output += `<li>Index ${i}: ${sampleArray[i]}</li>`;
+            }
+            output += "</ul>";
+            document.getElementById("loops-output").innerHTML = output;
+        }
+        
+        function showForOfLoop() {
+            let output = "<h3>For...Of Loop</h3><ul>";
+            for (const num of sampleArray) {
+                output += `<li>Value: ${num}</li>`;
+            }
+            output += "</ul>";
+            document.getElementById("loops-output").innerHTML = output;
+        }
+        
+        function showForInLoop() {
+            let output = "<h3>For...In Loop (with objects)</h3><ul>";
+            const sampleObj = { name: "Alice", age: 25, occupation: "Developer" };
+            for (const key in sampleObj) {
+                output += `<li>${key}: ${sampleObj[key]}</li>`;
+            }
+            output += "</ul>";
+            document.getElementById("loops-output").innerHTML = output;
+        }
+
+        // ===========================================
+        // 3. TASK MANAGER WITH LOCALSTORAGE
+        // ===========================================
+        let tasks = [];
+        
+        // Load tasks from localStorage
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('tasks');
+            tasks = savedTasks ? JSON.parse(savedTasks) : [];
+            renderTasks();
+            updateStorageStatus();
+        }
+        
+        // Save tasks to localStorage
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            updateStorageStatus();
+        }
+        
+        // Render tasks to the DOM
+        function renderTasks(filteredTasks = null) {
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML = '';
+            
+            const tasksToRender = filteredTasks || tasks;
+            
+            if (tasksToRender.length === 0) {
+                taskList.innerHTML = '<li>No tasks found</li>';
+                return;
+            }
+            
+            tasksToRender.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = `task-item ${task.completed ? 'completed' : ''} priority-${task.priority}`;
+                
+                li.innerHTML = `
+                    <div>
+                        <input type="checkbox" ${task.completed ? 'checked' : ''} 
+                               onchange="toggleTaskCompletion(${index})">
+                        <span>${task.text}</span>
+                        <span class="category-tag">${task.category}</span>
+                    </div>
+                    <div class="task-actions">
+                        <button onclick="deleteTask(${index})">Delete</button>
+                    </div>
+                `;
+                
+                taskList.appendChild(li);
+            });
+        }
+        
+        // Add new task
+        function addNewTask() {
+            const taskInput = document.getElementById('new-task');
+            const prioritySelect = document.getElementById('task-priority');
+            const categorySelect = document.getElementById('task-category');
+            
+            if (taskInput.value.trim() === '') {
+                alert('Please enter a task description');
+                return;
+            }
+            
+            const newTask = {
+                text: taskInput.value.trim(),
+                priority: prioritySelect.value,
+                category: categorySelect.value,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+            
+            tasks.push(newTask);
+            saveTasks();
+            renderTasks();
+            
+            taskInput.value = '';
+            taskInput.focus();
+        }
+        
+        // Toggle task completion
+        function toggleTaskCompletion(index) {
+            tasks[index].completed = !tasks[index].completed;
+            saveTasks();
+            renderTasks();
+        }
+        
+        // Delete task
+        function deleteTask(index) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                tasks.splice(index, 1);
+                saveTasks();
+                renderTasks();
+            }
+        }
+        
+        // Filter tasks
+        function filterTasks() {
+            const searchTerm = document.getElementById('search-task').value.toLowerCase();
+            if (!searchTerm) {
+                renderTasks();
+                return;
+            }
+            
+            const filtered = tasks.filter(task => 
+                task.text.toLowerCase().includes(searchTerm) ||
+                task.category.toLowerCase().includes(searchTerm)
+            );
+            renderTasks(filtered);
+        }
+        
+        // Clear completed tasks
+        function clearCompleted() {
+            tasks = tasks.filter(task => !task.completed);
+            saveTasks();
+            renderTasks();
+        }
+        
+        // Update storage status
+        function updateStorageStatus() {
+            const status = document.getElementById('storage-status');
+            status.textContent = `${tasks.length} task(s) stored (${formatBytes(JSON.stringify(tasks).length)})`;
+        }
+        
+        // Helper function to format bytes
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', loadTasks);
+
+        // ===========================================
+        // 4. DEBUGGING EXERCISES
+        // ===========================================
+        function debugLocalStorage() {
+            // Intentionally broken - tries to parse non-existent data
+            const output = document.getElementById('debug-output-1');
+            try {
+                const data = JSON.parse(localStorage.getItem('nonexistent-key'));
+                output.innerHTML = `Data: ${data}`;
+            } catch (e) {
+                output.innerHTML = `<p style="color:red">Error: ${e.message}</p>
+                                   <p>Fix: Check if data exists before parsing</p>`;
+            }
+        }
+        
+        function debugLoop() {
+            // Intentionally broken - infinite loop
+            const output = document.getElementById('debug-output-2');
+            output.innerHTML = '<p>Check console for loop output</p>';
+            
+            console.log('=== Debugging Loop ===');
+            for (let i = 0; i < 5; i++) {  // Fixed from original i = 10; i > 0; i++
+                console.log(`Iteration ${i}`);
+            }
+            console.log('Loop completed');
+        }
+        
+        function debugFilter() {
+            // Intentionally broken - incorrect filter
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            const output = document.getElementById('debug-output-3');
+            
+            // Original broken version:
+            // const odds = numbers.filter(num => num % 2 !== 1);
+            
+            // Fixed version:
+            const odds = numbers.filter(num => num % 2 === 1);
+            
+            output.innerHTML = `
+                <p>Original array: [${numbers.join(', ')}]</p>
+                <p>Odd numbers: [${odds.join(', ')}]</p>
+                <p style="color:green">Fixed: Changed condition to num % 2 === 1</p>
+            `;
+        }
+    </script>
+</body>
+</html>

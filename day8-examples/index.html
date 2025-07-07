@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 8 - Asynchronous JavaScript</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .result {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .error {
+            color: var(--error-color);
+            background: #fde8e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .success {
+            color: var(--secondary-color);
+            background: #e8f8e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .tab-button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Day 8 - Asynchronous JavaScript</h1>
+
+        <!-- Callbacks Section -->
+        <section id="callbacks">
+            <h2>Callbacks</h2>
+            <div class="code-block">
+// Basic Callback Example
+function fetchData(callback) {
+    setTimeout(() => {
+        const data = { id: 1, name: 'John' };
+        callback(null, data);
+    }, 1000);
+}
+
+fetchData((error, data) => {
+    if (error) {
+        console.error('Error:', error);
+    } else {
+        console.log('Data:', data);
+    }
+});
+            </div>
+            <button onclick="runCallbackExample()">Run Callback Example</button>
+            <div id="callbackResult" class="result"></div>
+        </section>
+
+        <!-- Promises Section -->
+        <section id="promises">
+            <h2>Promises</h2>
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showTab('basic-promise')">Basic Promise</button>
+                    <button class="tab-button" onclick="showTab('promise-chain')">Promise Chain</button>
+                    <button class="tab-button" onclick="showTab('promise-all')">Promise.all</button>
+                </div>
+
+                <div id="basic-promise" class="tab-content active">
+                    <div class="code-block">
+// Basic Promise Example
+function fetchUserData() {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const success = Math.random() > 0.3;
+            if (success) {
+                resolve({ id: 1, name: 'John', email: 'john@example.com' });
+            } else {
+                reject(new Error('Failed to fetch user data'));
+            }
+        }, 1000);
+    });
+}
+
+fetchUserData()
+    .then(data => console.log('Success:', data))
+    .catch(error => console.error('Error:', error));
+                    </div>
+                    <button onclick="runBasicPromise()">Run Basic Promise</button>
+                    <div id="basicPromiseResult" class="result"></div>
+                </div>
+
+                <div id="promise-chain" class="tab-content">
+                    <div class="code-block">
+// Promise Chain Example
+function fetchUser(id) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve({ id, name: 'John' });
+        }, 1000);
+    });
+}
+
+function fetchUserPosts(userId) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve([
+                { id: 1, title: 'Post 1' },
+                { id: 2, title: 'Post 2' }
+            ]);
+        }, 1000);
+    });
+}
+
+fetchUser(1)
+    .then(user => {
+        console.log('User:', user);
+        return fetchUserPosts(user.id);
+    })
+    .then(posts => console.log('Posts:', posts))
+    .catch(error => console.error('Error:', error));
+                    </div>
+                    <button onclick="runPromiseChain()">Run Promise Chain</button>
+                    <div id="promiseChainResult" class="result"></div>
+                </div>
+
+                <div id="promise-all" class="tab-content">
+                    <div class="code-block">
+// Promise.all Example
+const promise1 = Promise.resolve(1);
+const promise2 = new Promise(resolve => setTimeout(() => resolve(2), 1000));
+const promise3 = new Promise(resolve => setTimeout(() => resolve(3), 2000));
+
+Promise.all([promise1, promise2, promise3])
+    .then(values => console.log('All values:', values))
+    .catch(error => console.error('Error:', error));
+                    </div>
+                    <button onclick="runPromiseAll()">Run Promise.all</button>
+                    <div id="promiseAllResult" class="result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Async/Await Section -->
+        <section id="async-await">
+            <h2>Async/Await</h2>
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showTab('basic-async')">Basic Async/Await</button>
+                    <button class="tab-button" onclick="showTab('async-error')">Error Handling</button>
+                    <button class="tab-button" onclick="showTab('parallel-async')">Parallel Execution</button>
+                </div>
+
+                <div id="basic-async" class="tab-content active">
+                    <div class="code-block">
+// Basic Async/Await Example
+async function fetchUserData() {
+    try {
+        const response = await new Promise(resolve => {
+            setTimeout(() => {
+                resolve({ id: 1, name: 'John' });
+            }, 1000);
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function main() {
+    try {
+        const user = await fetchUserData();
+        console.log('User:', user);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+                    </div>
+                    <button onclick="runBasicAsync()">Run Async/Await</button>
+                    <div id="basicAsyncResult" class="result"></div>
+                </div>
+
+                <div id="async-error" class="tab-content">
+                    <div class="code-block">
+// Async/Await Error Handling
+async function fetchData() {
+    try {
+        const success = Math.random() > 0.5;
+        if (!success) {
+            throw new Error('Random error occurred');
+        }
+        return { data: 'Success!' };
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function handleErrors() {
+    try {
+        const result = await fetchData();
+        console.log('Success:', result);
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+}
+                    </div>
+                    <button onclick="runAsyncError()">Run Error Handling</button>
+                    <div id="asyncErrorResult" class="result"></div>
+                </div>
+
+                <div id="parallel-async" class="tab-content">
+                    <div class="code-block">
+// Parallel Async/Await Execution
+async function fetchUser(id) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve({ id, name: `User ${id}` });
+        }, 1000);
+    });
+}
+
+async function fetchAllUsers() {
+    const userIds = [1, 2, 3];
+    const promises = userIds.map(id => fetchUser(id));
+    const users = await Promise.all(promises);
+    return users;
+}
+                    </div>
+                    <button onclick="runParallelAsync()">Run Parallel Execution</button>
+                    <div id="parallelAsyncResult" class="result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real-world Example Section -->
+        <section id="real-world">
+            <h2>Real-world Example: File Upload with Progress</h2>
+            <div class="code-block">
+// File Upload with Progress
+async function uploadFile(file) {
+    const totalChunks = 5;
+    const chunkSize = file.size / totalChunks;
+    
+    for (let i = 0; i < totalChunks; i++) {
+        const start = i * chunkSize;
+        const end = Math.min(start + chunkSize, file.size);
+        const chunk = file.slice(start, end);
+        
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const progress = ((i + 1) / totalChunks) * 100;
+        updateProgress(progress);
+    }
+    
+    return { success: true, message: 'Upload complete' };
+}
+
+function updateProgress(percent) {
+    const progressBar = document.querySelector('.progress');
+    progressBar.style.width = `${percent}%`;
+}
+            </div>
+            <input type="file" id="fileInput">
+            <button onclick="simulateFileUpload()">Upload File</button>
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <div id="uploadResult" class="result"></div>
+        </section>
+    </div>
+
+    <script>
+        // Tab functionality
+        function showTab(tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabButtons.forEach(button => button.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Callback Example
+        function runCallbackExample() {
+            const resultDiv = document.getElementById('callbackResult');
+            resultDiv.innerHTML = '<div class="loading"></div> Loading...';
+            
+            fetchData((error, data) => {
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="success">Data: ${JSON.stringify(data, null, 2)}</div>`;
+                }
+            });
+        }
+
+        function fetchData(callback) {
+            setTimeout(() => {
+                const success = Math.random() > 0.3;
+                if (success) {
+                    callback(null, { id: 1, name: 'John' });
+                } else {
+                    callback(new Error('Failed to fetch data'));
+                }
+            }, 1000);
+        }
+
+        // Basic Promise Example
+        function runBasicPromise() {
+            const resultDiv = document.getElementById('basicPromiseResult');
+            resultDiv.innerHTML = '<div class="loading"></div> Loading...';
+            
+            fetchUserData()
+                .then(data => {
+                    resultDiv.innerHTML = `<div class="success">Success: ${JSON.stringify(data, null, 2)}</div>`;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                });
+        }
+
+        function fetchUserData() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    const success = Math.random() > 0.3;
+                    if (success) {
+                        resolve({ id: 1, name: 'John', email: 'john@example.com' });
+                    } else {
+                        reject(new Error('Failed to fetch user data'));
+                    }
+                }, 1000);
+            });
+        }
+
+        // Promise Chain Example
+        function runPromiseChain() {
+            const resultDiv = document.getElementById('promiseChainResult');
+            resultDiv.innerHTML = '<div class="loading"></div> Loading...';
+            
+            fetchUser(1)
+                .then(user => {
+                    resultDiv.innerHTML += `<div>User: ${JSON.stringify(user)}</div>`;
+                    return fetchUserPosts(user.id);
+                })
+                .then(posts => {
+                    resultDiv.innerHTML += `<div>Posts: ${JSON.stringify(posts)}</div>`;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                });
+        }
+
+        function fetchUser(id) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({ id, name: 'John' });
+                }, 1000);
+            });
+        }
+
+        function fetchUserPosts(userId) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve([
+                        { id: 1, title: 'Post 1' },
+                        { id: 2, title: 'Post 2' }
+                    ]);
+                }, 1000);
+            });
+        }
+
+        // Promise.all Example
+        function runPromiseAll() {
+            const resultDiv = document.getElementById('promiseAllResult');
+            resultDiv.innerHTML = '<div class="loading"></div> Loading...';
+            
+            const promise1 = Promise.resolve(1);
+            const promise2 = new Promise(resolve => setTimeout(() => resolve(2), 1000));
+            const promise3 = new Promise(resolve => setTimeout(() => resolve(3), 2000));
+
+            Promise.all([promise1, promise2, promise3])
+                .then(values => {
+                    resultDiv.innerHTML = `<div class="success">All values: ${JSON.stringify(values)}</div>`;
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                });
+        }
+
+        // Basic Async/Await Example
+        async function runBasicAsync() {
+            const resultDiv = document.getElementById('basicAsyncResult');
+            resultDiv.innerHTML = '<div class="loading"></div> Loading...';
+            
+            try {
+                const user = await fetchUserData();
+                resultDiv.innerHTML = `<div class="success">User: ${JSON.stringify(user)}</div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        // Async/Await Error Handling
+        async function runAsyncError() {
+            const resultDiv = document.getElementById('asyncErrorResult');
+            resultDiv.innerHTML = '<div class="loading"></div> Loading...';
+            
+            try {
+                const result = await fetchData();
+                resultDiv.innerHTML = `<div class="success">Success: ${JSON.stringify(result)}</div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function fetchData() {
+            const success = Math.random() > 0.5;
+            if (!success) {
+                throw new Error('Random error occurred');
+            }
+            return { data: 'Success!' };
+        }
+
+        // Parallel Async/Await Execution
+        async function runParallelAsync() {
+            const resultDiv = document.getElementById('parallelAsyncResult');
+            resultDiv.innerHTML = '<div class="loading"></div> Loading...';
+            
+            try {
+                const users = await fetchAllUsers();
+                resultDiv.innerHTML = `<div class="success">Users: ${JSON.stringify(users)}</div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function fetchAllUsers() {
+            const userIds = [1, 2, 3];
+            const promises = userIds.map(id => fetchUser(id));
+            return await Promise.all(promises);
+        }
+
+        // File Upload Simulation
+        async function simulateFileUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const resultDiv = document.getElementById('uploadResult');
+            
+            if (!fileInput.files.length) {
+                resultDiv.innerHTML = '<div class="error">Please select a file first</div>';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            resultDiv.innerHTML = '<div class="loading"></div> Uploading...';
+            
+            try {
+                const result = await uploadFile(file);
+                resultDiv.innerHTML = `<div class="success">${result.message}</div>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function uploadFile(file) {
+            const totalChunks = 5;
+            const chunkSize = file.size / totalChunks;
+            
+            for (let i = 0; i < totalChunks; i++) {
+                const start = i * chunkSize;
+                const end = Math.min(start + chunkSize, file.size);
+                const chunk = file.slice(start, end);
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+                const progress = ((i + 1) / totalChunks) * 100;
+                updateProgress(progress);
+            }
+            
+            return { success: true, message: 'Upload complete' };
+        }
+
+        function updateProgress(percent) {
+            const progressBar = document.querySelector('.progress');
+            progressBar.style.width = `${percent}%`;
+        }
+    </script>
+</body>
+</html>

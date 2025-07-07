@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 12 - Modern JavaScript Features (Enhanced)</title>
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        /* Container for content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Section styling */
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Typography */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Example box styling */
+        .example {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Code block styling */
+        .code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        /* Button styling */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Output area styling */
+        .output {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        /* Status colors */
+        .error {
+            color: var(--error-color);
+        }
+
+        .success {
+            color: var(--secondary-color);
+        }
+
+        .warning {
+            color: var(--warning-color);
+        }
+
+        /* Tab navigation */
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 0 4px 4px 4px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Modern JavaScript Features (Enhanced)</h1>
+
+        <!-- ES6+ Features Section -->
+        <section class="section">
+            <h2>ES6+ Features</h2>
+            
+            <!-- Template Literals Example -->
+            <div class="example">
+                <h3>Template Literals</h3>
+                <div class="code">
+// Template Literals
+// - Multi-line strings
+// - String interpolation
+// - Tagged templates
+const name = 'John';
+const age = 30;
+const greeting = `Hello, ${name}!
+You are ${age} years old.`;
+                </div>
+                <button onclick="runTemplateLiterals()">Run Example</button>
+                <div id="templateLiteralsOutput" class="output"></div>
+            </div>
+
+            <!-- Destructuring Example -->
+            <div class="example">
+                <h3>Destructuring</h3>
+                <div class="code">
+// Destructuring
+// - Array destructuring
+// - Object destructuring
+// - Default values
+const [first, second, ...rest] = [1, 2, 3, 4, 5];
+const { name, age, country = 'USA' } = { name: 'John', age: 30 };
+                </div>
+                <button onclick="runDestructuring()">Run Example</button>
+                <div id="destructuringOutput" class="output"></div>
+            </div>
+
+            <!-- Spread/Rest Example -->
+            <div class="example">
+                <h3>Spread/Rest Operators</h3>
+                <div class="code">
+// Spread/Rest Operators
+// - Array spreading
+// - Object spreading
+// - Rest parameters
+const arr1 = [1, 2, 3];
+const arr2 = [...arr1, 4, 5];
+const obj1 = { a: 1, b: 2 };
+const obj2 = { ...obj1, c: 3 };
+                </div>
+                <button onclick="runSpreadRest()">Run Example</button>
+                <div id="spreadRestOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Modern Functions Section -->
+        <section class="section">
+            <h2>Modern Functions</h2>
+            
+            <!-- Arrow Functions Example -->
+            <div class="example">
+                <h3>Arrow Functions</h3>
+                <div class="code">
+// Arrow Functions
+// - Shorter syntax
+// - No 'this' binding
+// - Implicit return
+const add = (a, b) => a + b;
+const multiply = (a, b) => {
+    return a * b;
+};
+                </div>
+                <button onclick="runArrowFunctions()">Run Example</button>
+                <div id="arrowFunctionsOutput" class="output"></div>
+            </div>
+
+            <!-- Default Parameters Example -->
+            <div class="example">
+                <h3>Default Parameters</h3>
+                <div class="code">
+// Default Parameters
+// - Function parameters
+// - Object destructuring
+// - Array destructuring
+function greet(name = 'Guest', greeting = 'Hello') {
+    return `${greeting}, ${name}!`;
+}
+                </div>
+                <button onclick="runDefaultParameters()">Run Example</button>
+                <div id="defaultParametersOutput" class="output"></div>
+            </div>
+
+            <!-- Rest Parameters Example -->
+            <div class="example">
+                <h3>Rest Parameters</h3>
+                <div class="code">
+// Rest Parameters
+// - Variable arguments
+// - Array-like object
+// - Function parameters
+function sum(...numbers) {
+    return numbers.reduce((total, num) => total + num, 0);
+}
+                </div>
+                <button onclick="runRestParameters()">Run Example</button>
+                <div id="restParametersOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Modern Objects Section -->
+        <section class="section">
+            <h2>Modern Objects</h2>
+            
+            <!-- Object Methods Example -->
+            <div class="example">
+                <h3>Object Methods</h3>
+                <div class="code">
+// Object Methods
+// - Object.keys()
+// - Object.values()
+// - Object.entries()
+const person = {
+    name: 'John',
+    age: 30,
+    city: 'New York'
+};
+const keys = Object.keys(person);
+const values = Object.values(person);
+const entries = Object.entries(person);
+                </div>
+                <button onclick="runObjectMethods()">Run Example</button>
+                <div id="objectMethodsOutput" class="output"></div>
+            </div>
+
+            <!-- Object Property Shorthand Example -->
+            <div class="example">
+                <h3>Object Property Shorthand</h3>
+                <div class="code">
+// Object Property Shorthand
+// - Property names
+// - Method names
+// - Computed properties
+const name = 'John';
+const age = 30;
+const person = { name, age };
+                </div>
+                <button onclick="runPropertyShorthand()">Run Example</button>
+                <div id="propertyShorthandOutput" class="output"></div>
+            </div>
+
+            <!-- Object Destructuring Example -->
+            <div class="example">
+                <h3>Object Destructuring</h3>
+                <div class="code">
+// Object Destructuring
+// - Nested objects
+// - Default values
+// - Renaming properties
+const person = {
+    name: 'John',
+    age: 30,
+    address: {
+        city: 'New York',
+        country: 'USA'
+    }
+};
+const { name, age, address: { city } } = person;
+                </div>
+                <button onclick="runObjectDestructuring()">Run Example</button>
+                <div id="objectDestructuringOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Modern Arrays Section -->
+        <section class="section">
+            <h2>Modern Arrays</h2>
+            
+            <!-- Array Methods Example -->
+            <div class="example">
+                <h3>Array Methods</h3>
+                <div class="code">
+// Array Methods
+// - map()
+// - filter()
+// - reduce()
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(n => n * 2);
+const even = numbers.filter(n => n % 2 === 0);
+const sum = numbers.reduce((a, b) => a + b, 0);
+                </div>
+                <button onclick="runArrayMethods()">Run Example</button>
+                <div id="arrayMethodsOutput" class="output"></div>
+            </div>
+
+            <!-- Array Destructuring Example -->
+            <div class="example">
+                <h3>Array Destructuring</h3>
+                <div class="code">
+// Array Destructuring
+// - Basic destructuring
+// - Rest operator
+// - Default values
+const [first, second, ...rest] = [1, 2, 3, 4, 5];
+const [a, b, c = 0] = [1, 2];
+                </div>
+                <button onclick="runArrayDestructuring()">Run Example</button>
+                <div id="arrayDestructuringOutput" class="output"></div>
+            </div>
+
+            <!-- Array Spread Example -->
+            <div class="example">
+                <h3>Array Spread</h3>
+                <div class="code">
+// Array Spread
+// - Combining arrays
+// - Copying arrays
+// - Spreading into function calls
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+const combined = [...arr1, ...arr2];
+const copy = [...arr1];
+                </div>
+                <button onclick="runArraySpread()">Run Example</button>
+                <div id="arraySpreadOutput" class="output"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Helper function to show tab content
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Helper function to display output
+        function displayOutput(elementId, output) {
+            const element = document.getElementById(elementId);
+            element.textContent = output;
+        }
+
+        // Template Literals Example
+        function runTemplateLiterals() {
+            const name = 'John';
+            const age = 30;
+            const greeting = `Hello, ${name}!
+You are ${age} years old.`;
+            displayOutput('templateLiteralsOutput', greeting);
+        }
+
+        // Destructuring Example
+        function runDestructuring() {
+            const [first, second, ...rest] = [1, 2, 3, 4, 5];
+            const { name, age, country = 'USA' } = { name: 'John', age: 30 };
+            const output = `Array: ${first}, ${second}, [${rest}]
+Object: ${name}, ${age}, ${country}`;
+            displayOutput('destructuringOutput', output);
+        }
+
+        // Spread/Rest Example
+        function runSpreadRest() {
+            const arr1 = [1, 2, 3];
+            const arr2 = [...arr1, 4, 5];
+            const obj1 = { a: 1, b: 2 };
+            const obj2 = { ...obj1, c: 3 };
+            const output = `Array: ${arr2}
+Object: ${JSON.stringify(obj2)}`;
+            displayOutput('spreadRestOutput', output);
+        }
+
+        // Arrow Functions Example
+        function runArrowFunctions() {
+            const add = (a, b) => a + b;
+            const multiply = (a, b) => {
+                return a * b;
+            };
+            const output = `Add: ${add(2, 3)}
+Multiply: ${multiply(2, 3)}`;
+            displayOutput('arrowFunctionsOutput', output);
+        }
+
+        // Default Parameters Example
+        function runDefaultParameters() {
+            function greet(name = 'Guest', greeting = 'Hello') {
+                return `${greeting}, ${name}!`;
+            }
+            const output = `${greet()}
+${greet('John')}
+${greet('John', 'Hi')}`;
+            displayOutput('defaultParametersOutput', output);
+        }
+
+        // Rest Parameters Example
+        function runRestParameters() {
+            function sum(...numbers) {
+                return numbers.reduce((total, num) => total + num, 0);
+            }
+            const output = `Sum: ${sum(1, 2, 3, 4, 5)}`;
+            displayOutput('restParametersOutput', output);
+        }
+
+        // Object Methods Example
+        function runObjectMethods() {
+            const person = {
+                name: 'John',
+                age: 30,
+                city: 'New York'
+            };
+            const keys = Object.keys(person);
+            const values = Object.values(person);
+            const entries = Object.entries(person);
+            const output = `Keys: ${keys}
+Values: ${values}
+Entries: ${entries.map(([k, v]) => `${k}: ${v}`).join(', ')}`;
+            displayOutput('objectMethodsOutput', output);
+        }
+
+        // Property Shorthand Example
+        function runPropertyShorthand() {
+            const name = 'John';
+            const age = 30;
+            const person = { name, age };
+            displayOutput('propertyShorthandOutput', JSON.stringify(person, null, 2));
+        }
+
+        // Object Destructuring Example
+        function runObjectDestructuring() {
+            const person = {
+                name: 'John',
+                age: 30,
+                address: {
+                    city: 'New York',
+                    country: 'USA'
+                }
+            };
+            const { name, age, address: { city } } = person;
+            const output = `Name: ${name}
+Age: ${age}
+City: ${city}`;
+            displayOutput('objectDestructuringOutput', output);
+        }
+
+        // Array Methods Example
+        function runArrayMethods() {
+            const numbers = [1, 2, 3, 4, 5];
+            const doubled = numbers.map(n => n * 2);
+            const even = numbers.filter(n => n % 2 === 0);
+            const sum = numbers.reduce((a, b) => a + b, 0);
+            const output = `Doubled: ${doubled}
+Even: ${even}
+Sum: ${sum}`;
+            displayOutput('arrayMethodsOutput', output);
+        }
+
+        // Array Destructuring Example
+        function runArrayDestructuring() {
+            const [first, second, ...rest] = [1, 2, 3, 4, 5];
+            const [a, b, c = 0] = [1, 2];
+            const output = `First: ${first}
+Second: ${second}
+Rest: ${rest}
+A: ${a}
+B: ${b}
+C: ${c}`;
+            displayOutput('arrayDestructuringOutput', output);
+        }
+
+        // Array Spread Example
+        function runArraySpread() {
+            const arr1 = [1, 2, 3];
+            const arr2 = [4, 5, 6];
+            const combined = [...arr1, ...arr2];
+            const copy = [...arr1];
+            const output = `Combined: ${combined}
+Copy: ${copy}`;
+            displayOutput('arraySpreadOutput', output);
+        }
+    </script>
+</body>
+</html> 

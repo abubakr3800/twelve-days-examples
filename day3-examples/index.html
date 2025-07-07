@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 3 - Complete JavaScript Fundamentals</title>
+    <style>
+        /* ======================
+           GENERAL STYLES 
+           ====================== */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background-color: #222;
+            color: #eee;
+        }
+        
+        section {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode section {
+            background-color: #333;
+            border-color: #444;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        body.dark-mode h1 {
+            color: #3498db;
+        }
+        
+        h2 {
+            color: #2980b9;
+            margin-top: 0;
+        }
+        
+        body.dark-mode h2 {
+            color: #5dade2;
+        }
+        
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .task-list li {
+            background: #ecf0f1;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        body.dark-mode .task-list li {
+            background: #444;
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+        
+        button, input[type="submit"] {
+            cursor: pointer;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        button:hover, input[type="submit"]:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+        
+        input[type="text"], 
+        input[type="number"],
+        input[type="email"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+            transition: all 0.3s;
+        }
+        
+        body.dark-mode input {
+            background-color: #444;
+            color: white;
+            border-color: #555;
+        }
+        
+        .debug-section {
+            background-color: #fff3e0;
+            border-left: 4px solid #e67e22;
+        }
+        
+        body.dark-mode .debug-section {
+            background-color: #443300;
+        }
+        
+        .user-profile {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        body.dark-mode .user-profile {
+            background: #1a344d;
+        }
+        
+        .array-methods {
+            background: #e8f8f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        body.dark-mode .array-methods {
+            background: #0d3b33;
+        }
+        
+        .storage-status {
+            font-size: 0.9em;
+            color: #27ae60;
+            margin-top: 5px;
+        }
+        
+        body.dark-mode .storage-status {
+            color: #2ecc71;
+        }
+        
+        #mouse-box {
+            width: 100px;
+            height: 100px;
+            background: #3498db;
+            transition: all 0.3s;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Day 3: Complete JavaScript Fundamentals</h1>
+    
+    <!-- ===========================================
+         VARIABLES & DATA TYPES
+         =========================================== -->
+    <section id="variables-section">
+        <h2>1. Variables & Data Types</h2>
+        <p>Open the console to see examples (Ctrl+Shift+J):</p>
+        <button onclick="showVariables()">Show Variables in Console</button>
+        
+        <div class="user-profile">
+            <h3>Template Literals Demo</h3>
+            <button onclick="showTemplateLiteral()">Show User Profile</button>
+            <div id="template-output"></div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         FUNCTIONS & CONDITIONALS
+         =========================================== -->
+    <section id="functions-section">
+        <h2>2. Functions & Conditionals</h2>
+        
+        <div>
+            <h3>Age Checker</h3>
+            <label for="age-input">Enter your age:</label>
+            <input type="number" id="age-input">
+            <button onclick="checkAge()">Check Age</button>
+            <p id="age-result"></p>
+        </div>
+        
+        <div>
+            <h3>Arrow Function Demo</h3>
+            <button onclick="showArrowFunction()">Run Arrow Function</button>
+            <p id="arrow-output"></p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         ARRAY METHODS
+         =========================================== -->
+    <section id="array-section">
+        <h2>3. Array Methods</h2>
+        
+        <div class="array-methods">
+            <h3>.map() Example</h3>
+            <button onclick="showMapExample()">Double Numbers</button>
+            <p>Original: [1, 2, 3, 4, 5]</p>
+            <p id="map-output"></p>
+        </div>
+        
+        <div class="array-methods">
+            <h3>.filter() Example</h3>
+            <button onclick="showFilterExample()">Filter Even Numbers</button>
+            <p>Original: [1, 2, 3, 4, 5, 6, 7, 8]</p>
+            <p id="filter-output"></p>
+        </div>
+        
+        <div class="array-methods">
+            <h3>.reduce() Example</h3>
+            <button onclick="showReduceExample()">Calculate Sum</button>
+            <p>Original: [10, 20, 30, 40]</p>
+            <p id="reduce-output"></p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         DOM MANIPULATION
+         =========================================== -->
+    <section id="dom-section">
+        <h2>4. DOM Manipulation</h2>
+        
+        <div>
+            <h3>Task Manager (with localStorage)</h3>
+            <input type="text" id="task-input" placeholder="New task">
+            <button onclick="addTask()">Add Task</button>
+            <span class="storage-status" id="storage-status"></span>
+            <ul class="task-list" id="task-list"></ul>
+        </div>
+        
+        <div>
+            <h3>Dark Mode Toggle</h3>
+            <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         EVENT LISTENERS
+         =========================================== -->
+    <section id="events-section">
+        <h2>5. Event Listeners</h2>
+        
+        <div>
+            <h3>Click Event</h3>
+            <button id="color-changer">Change Background</button>
+        </div>
+        
+        <div>
+            <h3>Form Submission</h3>
+            <form id="sample-form">
+                <input type="text" placeholder="Type something" required>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        
+        <div>
+            <h3>Mouse Events</h3>
+            <div id="mouse-box"></div>
+            <p id="mouse-status">Hover over the blue box</p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         DEBUGGING EXERCISES
+         =========================================== -->
+    <section class="debug-section">
+        <h2>6. Debugging Exercises</h2>
+        
+        <div>
+            <h3>Exercise 1: Fix the Calculator</h3>
+            <input type="number" id="num1" placeholder="Number 1">
+            <input type="number" id="num2" placeholder="Number 2">
+            <button onclick="calculate()">Add Numbers</button>
+            <p id="calc-result"></p>
+        </div>
+        
+        <div>
+            <h3>Exercise 2: Fix the Event Listener</h3>
+            <button id="broken-button">This button doesn't work - fix it!</button>
+        </div>
+        
+        <div>
+            <h3>Exercise 3: Fix the User Profile Generator</h3>
+            <button onclick="generateProfile()">Generate Profile</button>
+            <div id="profile-output"></div>
+        </div>
+    </section>
+
+    <script>
+        // ===========================================
+        // 1. VARIABLES & DATA TYPES
+        // ===========================================
+        function showVariables() {
+            // String
+            let userName = "Alice";
+            
+            // Number
+            const age = 25;
+            
+            // Boolean
+            const isStudent = true;
+            
+            // Array
+            const skills = ["HTML", "CSS", "JavaScript"];
+            
+            // Object
+            const user = {
+                name: "Bob",
+                age: 30,
+                isAdmin: false,
+                address: {
+                    street: "123 Main St",
+                    city: "Techville"
+                }
+            };
+            
+            console.log("=== Variables ===");
+            console.log("String:", userName);
+            console.log("Number:", age);
+            console.log("Boolean:", isStudent);
+            console.log("Array:", skills);
+            console.log("Object:", user);
+            console.log("Nested Object:", user.address.city);
+        }
+        
+        function showTemplateLiteral() {
+            const name = prompt("Enter your name:");
+            const age = prompt("Enter your age:");
+            document.getElementById("template-output").innerHTML = `
+                <p><strong>Hello ${name}!</strong></p>
+                <p>You are ${age} years old.</p>
+                <p>Next year you'll be ${Number(age) + 1}.</p>
+                <p>Generated at ${new Date().toLocaleTimeString()}</p>
+            `;
+        }
+
+        // ===========================================
+        // 2. FUNCTIONS & CONDITIONALS
+        // ===========================================
+        function checkAge() {
+            const age = document.getElementById("age-input").value;
+            const resultElement = document.getElementById("age-result");
+            
+            if (!age) {
+                resultElement.textContent = "Please enter a valid age";
+                resultElement.style.color = "red";
+                return;
+            }
+            
+            if (age >= 21) {
+                resultElement.textContent = "You can drink!";
+                resultElement.style.color = "green";
+            } else if (age >= 18) {
+                resultElement.textContent = "You're an adult!";
+                resultElement.style.color = "blue";
+            } else {
+                resultElement.textContent = "You're a minor!";
+                resultElement.style.color = "red";
+            }
+        }
+        
+        const showArrowFunction = () => {
+            document.getElementById("arrow-output").textContent = 
+                `This message was generated at ${new Date().toLocaleTimeString()} using an arrow function!`;
+        };
+
+        // ===========================================
+        // 3. ARRAY METHODS
+        // ===========================================
+        function showMapExample() {
+            const numbers = [1, 2, 3, 4, 5];
+            const doubled = numbers.map(num => num * 2);
+            document.getElementById("map-output").textContent = 
+                `Result: [${doubled.join(", ")}]`;
+        }
+        
+        function showFilterExample() {
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+            const evens = numbers.filter(num => num % 2 === 0);
+            document.getElementById("filter-output").textContent = 
+                `Even numbers: [${evens.join(", ")}]`;
+        }
+        
+        function showReduceExample() {
+            const numbers = [10, 20, 30, 40];
+            const sum = numbers.reduce((total, num) => total + num, 0);
+            document.getElementById("reduce-output").textContent = 
+                `Total sum: ${sum}`;
+        }
+
+        // ===========================================
+        // 4. DOM MANIPULATION & LOCALSTORAGE
+        // ===========================================
+        // Load tasks from localStorage on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            const taskList = document.getElementById("task-list");
+            
+            savedTasks.forEach(task => {
+                const li = createTaskElement(task);
+                taskList.appendChild(li);
+            });
+            
+            updateStorageStatus();
+        });
+        
+        function createTaskElement(taskText) {
+            const li = document.createElement("li");
+            li.innerHTML = `
+                ${taskText}
+                <div>
+                    <button onclick="toggleTask(this)">Toggle</button>
+                    <button onclick="removeTask(this)">Remove</button>
+                </div>
+            `;
+            return li;
+        }
+        
+        function addTask() {
+            const taskInput = document.getElementById("task-input");
+            const taskList = document.getElementById("task-list");
+            
+            if (taskInput.value.trim() === "") {
+                alert("Please enter a task!");
+                return;
+            }
+            
+            const li = createTaskElement(taskInput.value);
+            taskList.appendChild(li);
+            taskInput.value = "";
+            
+            saveTasksToStorage();
+            updateStorageStatus();
+        }
+        
+        function toggleTask(button) {
+            const li = button.closest("li");
+            li.classList.toggle("completed");
+            saveTasksToStorage();
+        }
+        
+        function removeTask(button) {
+            if (confirm("Are you sure you want to remove this task?")) {
+                const li = button.closest("li");
+                li.remove();
+                saveTasksToStorage();
+                updateStorageStatus();
+            }
+        }
+        
+        function saveTasksToStorage() {
+            const tasks = [];
+            document.querySelectorAll("#task-list li").forEach(li => {
+                tasks.push(li.textContent.replace("ToggleRemove", "").trim());
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+        
+        function updateStorageStatus() {
+            const status = document.getElementById("storage-status");
+            const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            status.textContent = `${tasks.length} task(s) saved in localStorage`;
+        }
+        
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+        }
+        
+        // Check for saved dark mode preference
+        if (localStorage.getItem("darkMode") === "true") {
+            document.body.classList.add("dark-mode");
+        }
+
+        // ===========================================
+        // 5. EVENT LISTENERS
+        // ===========================================
+        document.getElementById("color-changer").addEventListener("click", function() {
+            const colors = ["#f0f0f0", "#ffe6e6", "#e6ffe6", "#e6e6ff"];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.backgroundColor = randomColor;
+        });
+        
+        document.getElementById("sample-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            alert("Form submitted successfully!");
+            this.reset();
+        });
+        
+        const mouseBox = document.getElementById("mouse-box");
+        mouseBox.addEventListener("mouseover", function() {
+            document.getElementById("mouse-status").textContent = "Mouse is OVER the box!";
+            this.style.transform = "scale(1.1)";
+            this.style.backgroundColor = "#e74c3c";
+        });
+        
+        mouseBox.addEventListener("mouseout", function() {
+            document.getElementById("mouse-status").textContent = "Mouse LEFT the box";
+            this.style.transform = "scale(1)";
+            this.style.backgroundColor = "#3498db";
+        });
+
+        // ===========================================
+        // 6. DEBUGGING EXERCISES
+        // ===========================================
+        // Exercise 1: Fix the Calculator
+        function calculate() {
+            const num1 = parseFloat(document.getElementById("num1").value) || 0;
+            const num2 = parseFloat(document.getElementById("num2").value) || 0;
+            const result = num1 + num2;
+            document.getElementById("calc-result").textContent = `Result: ${result}`;
+        }
+        
+        // Exercise 2: Fix the Event Listener
+        document.getElementById("broken-button").addEventListener("click", function() {
+            alert("You fixed me! Great job!");
+        });
+        
+        // Exercise 3: Fix the User Profile Generator
+        function generateProfile() {
+            const user = {
+                firstName: "John",
+                lastName: "Doe",
+                age: 25,
+                occupation: "Developer",
+                skills: ["JavaScript", "HTML", "CSS"],
+                address: {
+                    street: "123 Code Lane",
+                    city: "Dev City"
+                }
+            };
+            
+            // Fixed: Properly accessing nested object properties
+            document.getElementById("profile-output").innerHTML = `
+                <h4>${user.firstName} ${user.lastName}</h4>
+                <p>Age: ${user.age}</p>
+                <p>Occupation: ${user.occupation}</p>
+                <p>Skills: ${user.skills.join(", ")}</p>
+                <p>Address: ${user.address.street}, ${user.address.city}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

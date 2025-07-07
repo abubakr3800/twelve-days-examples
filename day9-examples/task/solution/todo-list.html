@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List - Solution</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .todo-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .todo-list {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .todo-item {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+        }
+
+        .todo-item.dragging {
+            opacity: 0.5;
+        }
+
+        .todo-content {
+            flex: 1;
+        }
+
+        .todo-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .todo-description {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .todo-meta {
+            display: flex;
+            gap: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .todo-priority {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .priority-high {
+            background-color: #fde8e8;
+            color: var(--error-color);
+        }
+
+        .priority-medium {
+            background-color: #fef3c7;
+            color: var(--warning-color);
+        }
+
+        .priority-low {
+            background-color: #e8f5e9;
+            color: var(--secondary-color);
+        }
+
+        .todo-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .status-pending {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .status-in-progress {
+            background-color: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .status-completed {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+
+        .todo-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .todo-actions button {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .todo-actions .edit-btn {
+            background-color: var(--primary-color);
+        }
+
+        .todo-actions .delete-btn {
+            background-color: var(--error-color);
+        }
+
+        .todo-actions .complete-btn {
+            background-color: var(--secondary-color);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            color: white;
+            display: none;
+            z-index: 1000;
+        }
+
+        .notification.success {
+            background-color: var(--secondary-color);
+        }
+
+        .notification.error {
+            background-color: var(--error-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            text-align: right;
+        }
+
+        .modal-footer button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+
+        <!-- Todo Form -->
+        <div class="todo-form">
+            <h2>Add New Todo</h2>
+            <form id="todoForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date</label>
+                    <input type="datetime-local" id="dueDate">
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <select id="priority" required>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <button type="submit">Add Todo</button>
+            </form>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <select id="statusFilter">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+            </select>
+            <select id="priorityFilter">
+                <option value="all">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            <select id="sortBy">
+                <option value="createdAt">Sort by Created Date</option>
+                <option value="dueDate">Sort by Due Date</option>
+                <option value="priority">Sort by Priority</option>
+                <option value="title">Sort by Title</option>
+            </select>
+        </div>
+
+        <!-- Todo List -->
+        <div class="todo-list">
+            <h2>Todos</h2>
+            <div id="todoList"></div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Todo</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="form-group">
+                        <label for="editTitle">Title</label>
+                        <input type="text" id="editTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescription">Description</label>
+                        <textarea id="editDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDueDate">Due Date</label>
+                        <input type="datetime-local" id="editDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="editPriority">Priority</label>
+                        <select id="editPriority" required>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus" required>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelEdit">Cancel</button>
+                <button id="saveEdit">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Todo Class
+        class Todo {
+            constructor({ title, description, dueDate, priority }) {
+                this.id = Date.now();
+                this.title = title;
+                this.description = description;
+                this.dueDate = dueDate ? new Date(dueDate) : null;
+                this.priority = priority;
+                this.status = 'pending';
+                this.createdAt = new Date();
+                this.updatedAt = new Date();
+            }
+
+            update({ title, description, dueDate, priority, status }) {
+                this.title = title ?? this.title;
+                this.description = description ?? this.description;
+                this.dueDate = dueDate ? new Date(dueDate) : this.dueDate;
+                this.priority = priority ?? this.priority;
+                this.status = status ?? this.status;
+                this.updatedAt = new Date();
+            }
+
+            toJSON() {
+                return {
+                    id: this.id,
+                    title: this.title,
+                    description: this.description,
+                    dueDate: this.dueDate?.toISOString(),
+                    priority: this.priority,
+                    status: this.status,
+                    createdAt: this.createdAt.toISOString(),
+                    updatedAt: this.updatedAt.toISOString()
+                };
+            }
+
+            static fromJSON(json) {
+                const todo = new Todo({
+                    title: json.title,
+                    description: json.description,
+                    dueDate: json.dueDate,
+                    priority: json.priority
+                });
+                todo.id = json.id;
+                todo.status = json.status;
+                todo.createdAt = new Date(json.createdAt);
+                todo.updatedAt = new Date(json.updatedAt);
+                return todo;
+            }
+        }
+
+        // Storage Service
+        class StorageService {
+            constructor() {
+                this.storageKey = 'todos';
+            }
+
+            async saveTodo(todo) {
+                try {
+                    const todos = await this.loadTodos();
+                    todos.push(todo);
+                    localStorage.setItem(this.storageKey, JSON.stringify(todos));
+                    return todo;
+                } catch (error) {
+                    console.error('Error saving todo:', error);
+                    throw error;
+                }
+            }
+
+            async loadTodos() {
+                try {
+                    const todos = JSON.parse(localStorage.getItem(this.storageKey) || '[]');
+                    return todos.map(todo => Todo.fromJSON(todo));
+                } catch (error) {
+                    console.error('Error loading todos:', error);
+                    throw error;
+                }
+            }
+
+            async updateTodo(updatedTodo) {
+                try {
+                    const todos = await this.loadTodos();
+                    const index = todos.findIndex(todo => todo.id === updatedTodo.id);
+                    if (index === -1) throw new Error('Todo not found');
+                    todos[index] = updatedTodo;
+                    localStorage.setItem(this.storageKey, JSON.stringify(todos));
+                    return updatedTodo;
+                } catch (error) {
+                    console.error('Error updating todo:', error);
+                    throw error;
+                }
+            }
+
+            async deleteTodo(todoId) {
+                try {
+                    const todos = await this.loadTodos();
+                    const filteredTodos = todos.filter(todo => todo.id !== todoId);
+                    localStorage.setItem(this.storageKey, JSON.stringify(filteredTodos));
+                } catch (error) {
+                    console.error('Error deleting todo:', error);
+                    throw error;
+                }
+            }
+        }
+
+        // UI Manager
+        class UIManager {
+            constructor() {
+                this.todos = [];
+                this.storageService = new StorageService();
+                this.currentFilter = { status: 'all', priority: 'all' };
+                this.currentSort = 'createdAt';
+                this.editingTodoId = null;
+                this.setupEventListeners();
+                this.loadTodos();
+            }
+
+            async loadTodos() {
+                try {
+                    this.todos = await this.storageService.loadTodos();
+                    this.renderTodoList();
+                } catch (error) {
+                    this.showError('Error loading todos');
+                }
+            }
+
+            async addTodo(todo) {
+                try {
+                    const savedTodo = await this.storageService.saveTodo(todo);
+                    this.todos.push(savedTodo);
+                    this.renderTodoList();
+                    this.showSuccess('Todo added successfully');
+                } catch (error) {
+                    this.showError('Error adding todo');
+                }
+            }
+
+            async updateTodo(todo) {
+                try {
+                    const updatedTodo = await this.storageService.updateTodo(todo);
+                    const index = this.todos.findIndex(t => t.id === todo.id);
+                    if (index !== -1) {
+                        this.todos[index] = updatedTodo;
+                        this.renderTodoList();
+                        this.showSuccess('Todo updated successfully');
+                    }
+                } catch (error) {
+                    this.showError('Error updating todo');
+                }
+            }
+
+            async deleteTodo(todoId) {
+                try {
+                    await this.storageService.deleteTodo(todoId);
+                    this.todos = this.todos.filter(todo => todo.id !== todoId);
+                    this.renderTodoList();
+                    this.showSuccess('Todo deleted successfully');
+                } catch (error) {
+                    this.showError('Error deleting todo');
+                }
+            }
+
+            filterTodos() {
+                return this.todos.filter(todo => {
+                    const statusMatch = this.currentFilter.status === 'all' || todo.status === this.currentFilter.status;
+                    const priorityMatch = this.currentFilter.priority === 'all' || todo.priority === this.currentFilter.priority;
+                    return statusMatch && priorityMatch;
+                });
+            }
+
+            sortTodos(todos) {
+                return todos.sort((a, b) => {
+                    switch (this.currentSort) {
+                        case 'createdAt':
+                            return b.createdAt - a.createdAt;
+                        case 'dueDate':
+                            if (!a.dueDate) return 1;
+                            if (!b.dueDate) return -1;
+                            return a.dueDate - b.dueDate;
+                        case 'priority':
+                            const priorityOrder = { high: 0, medium: 1, low: 2 };
+                            return priorityOrder[a.priority] - priorityOrder[b.priority];
+                        case 'title':
+                            return a.title.localeCompare(b.title);
+                        default:
+                            return 0;
+                    }
+                });
+            }
+
+            renderTodoList() {
+                const todoList = document.getElementById('todoList');
+                const filteredTodos = this.filterTodos();
+                const sortedTodos = this.sortTodos(filteredTodos);
+
+                todoList.innerHTML = sortedTodos.map(todo => `
+                    <div class="todo-item" draggable="true" data-id="${todo.id}">
+                        <div class="todo-content">
+                            <div class="todo-title">${todo.title}</div>
+                            <div class="todo-description">${todo.description || ''}</div>
+                            <div class="todo-meta">
+                                <span class="todo-priority priority-${todo.priority}">${todo.priority}</span>
+                                <span class="todo-status status-${todo.status}">${todo.status}</span>
+                                ${todo.dueDate ? `<span>Due: ${this.formatDate(todo.dueDate)}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="todo-actions">
+                            <button class="edit-btn" onclick="uiManager.editTodo(${todo.id})">Edit</button>
+                            <button class="complete-btn" onclick="uiManager.toggleStatus(${todo.id})">
+                                ${todo.status === 'completed' ? 'Undo' : 'Complete'}
+                            </button>
+                            <button class="delete-btn" onclick="uiManager.deleteTodo(${todo.id})">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                this.setupDragAndDrop();
+            }
+
+            setupDragAndDrop() {
+                const todoItems = document.querySelectorAll('.todo-item');
+                todoItems.forEach(item => {
+                    item.addEventListener('dragstart', e => {
+                        e.target.classList.add('dragging');
+                        e.dataTransfer.setData('text/plain', e.target.dataset.id);
+                    });
+
+                    item.addEventListener('dragend', e => {
+                        e.target.classList.remove('dragging');
+                    });
+                });
+
+                const todoList = document.getElementById('todoList');
+                todoList.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    const draggingItem = document.querySelector('.dragging');
+                    const siblings = [...todoList.querySelectorAll('.todo-item:not(.dragging)')];
+                    const nextSibling = siblings.find(sibling => {
+                        const box = sibling.getBoundingClientRect();
+                        const offset = e.clientY - box.top - box.height / 2;
+                        return offset < 0;
+                    });
+
+                    todoList.insertBefore(draggingItem, nextSibling);
+                });
+            }
+
+            setupEventListeners() {
+                // Form submission
+                document.getElementById('todoForm').addEventListener('submit', e => {
+                    e.preventDefault();
+                    const todo = new Todo({
+                        title: document.getElementById('title').value,
+                        description: document.getElementById('description').value,
+                        dueDate: document.getElementById('dueDate').value,
+                        priority: document.getElementById('priority').value
+                    });
+                    this.addTodo(todo);
+                    e.target.reset();
+                });
+
+                // Filter changes
+                document.getElementById('statusFilter').addEventListener('change', e => {
+                    this.currentFilter.status = e.target.value;
+                    this.renderTodoList();
+                });
+
+                document.getElementById('priorityFilter').addEventListener('change', e => {
+                    this.currentFilter.priority = e.target.value;
+                    this.renderTodoList();
+                });
+
+                document.getElementById('sortBy').addEventListener('change', e => {
+                    this.currentSort = e.target.value;
+                    this.renderTodoList();
+                });
+
+                // Modal events
+                const modal = document.getElementById('editModal');
+                const closeBtn = document.querySelector('.close');
+                const cancelBtn = document.getElementById('cancelEdit');
+                const saveBtn = document.getElementById('saveEdit');
+
+                closeBtn.onclick = () => modal.style.display = 'none';
+                cancelBtn.onclick = () => modal.style.display = 'none';
+                window.onclick = e => {
+                    if (e.target === modal) modal.style.display = 'none';
+                };
+
+                saveBtn.onclick = () => {
+                    const todo = this.todos.find(t => t.id === this.editingTodoId);
+                    if (todo) {
+                        todo.update({
+                            title: document.getElementById('editTitle').value,
+                            description: document.getElementById('editDescription').value,
+                            dueDate: document.getElementById('editDueDate').value,
+                            priority: document.getElementById('editPriority').value,
+                            status: document.getElementById('editStatus').value
+                        });
+                        this.updateTodo(todo);
+                        modal.style.display = 'none';
+                    }
+                };
+            }
+
+            editTodo(todoId) {
+                const todo = this.todos.find(t => t.id === todoId);
+                if (todo) {
+                    this.editingTodoId = todoId;
+                    document.getElementById('editTitle').value = todo.title;
+                    document.getElementById('editDescription').value = todo.description || '';
+                    document.getElementById('editDueDate').value = todo.dueDate ? todo.dueDate.toISOString().slice(0, 16) : '';
+                    document.getElementById('editPriority').value = todo.priority;
+                    document.getElementById('editStatus').value = todo.status;
+                    document.getElementById('editModal').style.display = 'block';
+                }
+            }
+
+            async toggleStatus(todoId) {
+                const todo = this.todos.find(t => t.id === todoId);
+                if (todo) {
+                    todo.status = todo.status === 'completed' ? 'pending' : 'completed';
+                    await this.updateTodo(todo);
+                }
+            }
+
+            formatDate(date) {
+                return new Date(date).toLocaleString();
+            }
+
+            showSuccess(message) {
+                this.showNotification(message, 'success');
+            }
+
+            showError(message) {
+                this.showNotification(message, 'error');
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialize UI Manager
+        const uiManager = new UIManager();
+    </script>
+</body>
+</html> 

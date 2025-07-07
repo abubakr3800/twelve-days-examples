@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 9 - DOM Manipulation & Events (Enhanced)</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .example {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .output {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .error {
+            color: var(--error-color);
+        }
+
+        .success {
+            color: var(--secondary-color);
+        }
+
+        .warning {
+            color: var(--warning-color);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 0 4px 4px 4px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .event-box {
+            width: 200px;
+            height: 200px;
+            background-color: var(--primary-color);
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .event-box:hover {
+            background-color: #2980b9;
+        }
+
+        .drag-item {
+            width: 100px;
+            height: 100px;
+            background-color: var(--primary-color);
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: move;
+        }
+
+        .drop-zone {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed var(--border-color);
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+        }
+
+        .drop-zone.dragover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            color: white;
+            display: none;
+        }
+
+        .notification.success {
+            background-color: var(--secondary-color);
+        }
+
+        .notification.error {
+            background-color: var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DOM Manipulation & Events (Enhanced)</h1>
+
+        <!-- DOM Selection and Manipulation -->
+        <section class="section">
+            <h2>DOM Selection and Manipulation</h2>
+            <div class="example">
+                <h3>Element Selection</h3>
+                <div class="code">
+// Different ways to select elements
+const byId = document.getElementById('myId');
+const byClass = document.getElementsByClassName('myClass');
+const byTag = document.getElementsByTagName('div');
+const byQuery = document.querySelector('.myClass');
+const byQueryAll = document.querySelectorAll('.myClass');
+                </div>
+                <button onclick="runSelectionExample()">Run Example</button>
+                <div id="selectionOutput" class="output"></div>
+            </div>
+
+            <div class="example">
+                <h3>Element Creation and Manipulation</h3>
+                <div class="code">
+// Create and manipulate elements
+const element = document.createElement('div');
+element.className = 'new-element';
+element.textContent = 'New Element';
+element.style.backgroundColor = 'blue';
+element.style.color = 'white';
+element.style.padding = '10px';
+document.body.appendChild(element);
+                </div>
+                <button onclick="runManipulationExample()">Run Example</button>
+                <div id="manipulationOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Event Handling -->
+        <section class="section">
+            <h2>Event Handling</h2>
+            <div class="example">
+                <h3>Event Delegation</h3>
+                <div class="code">
+// Event delegation example
+const list = document.getElementById('dynamicList');
+list.addEventListener('click', (e) => {
+    if (e.target.matches('li')) {
+        e.target.classList.toggle('selected');
+    }
+});
+                </div>
+                <button onclick="addListItem()">Add Item</button>
+                <ul id="dynamicList"></ul>
+            </div>
+
+            <div class="example">
+                <h3>Custom Events</h3>
+                <div class="code">
+// Create and dispatch custom events
+const event = new CustomEvent('customEvent', {
+    detail: { message: 'Hello, World!' }
+});
+element.dispatchEvent(event);
+                </div>
+                <button onclick="runCustomEventExample()">Run Example</button>
+                <div id="customEventOutput" class="output"></div>
+            </div>
+
+            <div class="example">
+                <h3>Event Bubbling and Capturing</h3>
+                <div class="code">
+// Event bubbling and capturing
+parent.addEventListener('click', (e) => {
+    console.log('Parent clicked');
+}, true); // Capturing phase
+
+child.addEventListener('click', (e) => {
+    console.log('Child clicked');
+}); // Bubbling phase
+                </div>
+                <div id="eventPhaseBox" class="event-box">
+                    Click me!
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Demos -->
+        <section class="section">
+            <h2>Interactive Demos</h2>
+            <div class="example">
+                <h3>Drag and Drop</h3>
+                <div class="drag-item" draggable="true">Drag me!</div>
+                <div class="drop-zone">Drop here!</div>
+            </div>
+
+            <div class="example">
+                <h3>Form Validation</h3>
+                <form id="demoForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- UI Improvements -->
+        <section class="section">
+            <h2>UI Improvements</h2>
+            <div class="example">
+                <h3>Notifications</h3>
+                <button onclick="showSuccessNotification()">Show Success</button>
+                <button onclick="showErrorNotification()">Show Error</button>
+                <div id="notification" class="notification"></div>
+            </div>
+
+            <div class="example">
+                <h3>Loading States</h3>
+                <button onclick="simulateLoading()">Simulate Loading</button>
+                <div id="loadingOutput" class="output"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Helper function to show tab content
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Helper function to display output
+        function displayOutput(elementId, output) {
+            const element = document.getElementById(elementId);
+            element.textContent = output;
+        }
+
+        // Element Selection Example
+        function runSelectionExample() {
+            const output = [
+                'getElementById: ' + (document.getElementById('selectionOutput') ? 'Found' : 'Not found'),
+                'getElementsByClassName: ' + document.getElementsByClassName('example').length + ' elements',
+                'getElementsByTagName: ' + document.getElementsByTagName('div').length + ' elements',
+                'querySelector: ' + (document.querySelector('.example') ? 'Found' : 'Not found'),
+                'querySelectorAll: ' + document.querySelectorAll('.example').length + ' elements'
+            ].join('\n');
+
+            displayOutput('selectionOutput', output);
+        }
+
+        // Element Manipulation Example
+        function runManipulationExample() {
+            const element = document.createElement('div');
+            element.className = 'new-element';
+            element.textContent = 'New Element';
+            element.style.backgroundColor = 'blue';
+            element.style.color = 'white';
+            element.style.padding = '10px';
+            document.getElementById('manipulationOutput').appendChild(element);
+        }
+
+        // Event Delegation Example
+        function addListItem() {
+            const list = document.getElementById('dynamicList');
+            const item = document.createElement('li');
+            item.textContent = 'New Item ' + (list.children.length + 1);
+            list.appendChild(item);
+        }
+
+        // Custom Event Example
+        function runCustomEventExample() {
+            const element = document.createElement('div');
+            element.addEventListener('customEvent', (e) => {
+                displayOutput('customEventOutput', e.detail.message);
+            });
+            const event = new CustomEvent('customEvent', {
+                detail: { message: 'Hello, World!' }
+            });
+            element.dispatchEvent(event);
+        }
+
+        // Event Phase Example
+        document.getElementById('eventPhaseBox').addEventListener('click', (e) => {
+            console.log('Event Phase:', e.eventPhase);
+            console.log('Current Target:', e.currentTarget);
+            console.log('Target:', e.target);
+        }, true);
+
+        // Drag and Drop
+        const dragItem = document.querySelector('.drag-item');
+        const dropZone = document.querySelector('.drop-zone');
+
+        dragItem.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', e.target.textContent);
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const data = e.dataTransfer.getData('text/plain');
+            dropZone.textContent = `Dropped: ${data}`;
+        });
+
+        // Form Validation
+        document.getElementById('demoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            
+            if (name && email) {
+                showSuccessNotification('Form submitted successfully!');
+            } else {
+                showErrorNotification('Please fill in all fields!');
+            }
+        });
+
+        // Notifications
+        function showSuccessNotification(message = 'Operation successful!') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification success';
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function showErrorNotification(message = 'An error occurred!') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification error';
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Loading State
+        function simulateLoading() {
+            const output = document.getElementById('loadingOutput');
+            output.textContent = 'Loading...';
+            
+            setTimeout(() => {
+                output.textContent = 'Loading complete!';
+            }, 2000);
+        }
+    </script>
+</body>
+</html> 

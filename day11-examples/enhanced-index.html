@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 11 - Asynchronous JavaScript (Enhanced)</title>
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        /* Container for content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Section styling */
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Typography */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Example box styling */
+        .example {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Code block styling */
+        .code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        /* Button styling */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Output area styling */
+        .output {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        /* Status colors */
+        .error {
+            color: var(--error-color);
+        }
+
+        .success {
+            color: var(--secondary-color);
+        }
+
+        .warning {
+            color: var(--warning-color);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Tab navigation */
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 0 4px 4px 4px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Asynchronous JavaScript (Enhanced)</h1>
+
+        <!-- Callbacks Section -->
+        <section class="section">
+            <h2>Callbacks</h2>
+            
+            <!-- Basic Callback Example -->
+            <div class="example">
+                <h3>Basic Callback</h3>
+                <div class="code">
+// Basic Callback
+// - Function passed as argument
+// - Executed after main function
+// - Common in async operations
+function fetchData(callback) {
+    setTimeout(() => {
+        callback('Data received');
+    }, 1000);
+}
+
+fetchData((data) => {
+    console.log(data);
+});
+                </div>
+                <button onclick="runBasicCallback()">Run Example</button>
+                <div id="basicCallbackOutput" class="output"></div>
+            </div>
+
+            <!-- Callback Hell Example -->
+            <div class="example">
+                <h3>Callback Hell</h3>
+                <div class="code">
+// Callback Hell
+// - Nested callbacks
+// - Hard to maintain
+// - Difficult to read
+function fetchUser(id, callback) {
+    setTimeout(() => {
+        callback({ id, name: 'John' });
+    }, 1000);
+}
+
+function fetchPosts(userId, callback) {
+    setTimeout(() => {
+        callback(['Post 1', 'Post 2']);
+    }, 1000);
+}
+
+fetchUser(1, (user) => {
+    fetchPosts(user.id, (posts) => {
+        console.log(posts);
+    });
+});
+                </div>
+                <button onclick="runCallbackHell()">Run Example</button>
+                <div id="callbackHellOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Promises Section -->
+        <section class="section">
+            <h2>Promises</h2>
+            
+            <!-- Basic Promise Example -->
+            <div class="example">
+                <h3>Basic Promise</h3>
+                <div class="code">
+// Basic Promise
+// - Represents async operation
+// - Has three states: pending, fulfilled, rejected
+// - Can be chained
+const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve('Promise resolved');
+    }, 1000);
+});
+
+promise.then(result => console.log(result));
+                </div>
+                <button onclick="runBasicPromise()">Run Example</button>
+                <div id="basicPromiseOutput" class="output"></div>
+            </div>
+
+            <!-- Promise Chaining Example -->
+            <div class="example">
+                <h3>Promise Chaining</h3>
+                <div class="code">
+// Promise Chaining
+// - Multiple async operations
+// - Clean error handling
+// - Better than callbacks
+function fetchUser(id) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve({ id, name: 'John' });
+        }, 1000);
+    });
+}
+
+function fetchPosts(userId) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(['Post 1', 'Post 2']);
+        }, 1000);
+    });
+}
+
+fetchUser(1)
+    .then(user => fetchPosts(user.id))
+    .then(posts => console.log(posts));
+                </div>
+                <button onclick="runPromiseChaining()">Run Example</button>
+                <div id="promiseChainingOutput" class="output"></div>
+            </div>
+
+            <!-- Promise.all Example -->
+            <div class="example">
+                <h3>Promise.all</h3>
+                <div class="code">
+// Promise.all
+// - Executes promises in parallel
+// - Returns array of results
+// - Fails if any promise fails
+const promise1 = Promise.resolve(1);
+const promise2 = Promise.resolve(2);
+const promise3 = Promise.resolve(3);
+
+Promise.all([promise1, promise2, promise3])
+    .then(results => console.log(results));
+                </div>
+                <button onclick="runPromiseAll()">Run Example</button>
+                <div id="promiseAllOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Async/Await Section -->
+        <section class="section">
+            <h2>Async/Await</h2>
+            
+            <!-- Basic Async/Await Example -->
+            <div class="example">
+                <h3>Basic Async/Await</h3>
+                <div class="code">
+// Basic Async/Await
+// - Syntactic sugar for promises
+// - Makes async code look synchronous
+// - Requires try/catch for errors
+async function fetchData() {
+    const response = await new Promise(resolve => {
+        setTimeout(() => resolve('Data received'), 1000);
+    });
+    return response;
+}
+
+async function main() {
+    const data = await fetchData();
+    console.log(data);
+}
+                </div>
+                <button onclick="runBasicAsyncAwait()">Run Example</button>
+                <div id="basicAsyncAwaitOutput" class="output"></div>
+            </div>
+
+            <!-- Error Handling Example -->
+            <div class="example">
+                <h3>Error Handling</h3>
+                <div class="code">
+// Error Handling
+// - Try/catch blocks
+// - Async error propagation
+// - Clean error handling
+async function fetchData() {
+    try {
+        const response = await new Promise((resolve, reject) => {
+            setTimeout(() => reject('Error occurred'), 1000);
+        });
+        return response;
+    } catch (error) {
+        console.error(error);
+    }
+}
+                </div>
+                <button onclick="runErrorHandling()">Run Example</button>
+                <div id="errorHandlingOutput" class="output"></div>
+            </div>
+
+            <!-- Parallel Execution Example -->
+            <div class="example">
+                <h3>Parallel Execution</h3>
+                <div class="code">
+// Parallel Execution
+// - Multiple async operations
+// - Promise.all with async/await
+// - Faster than sequential
+async function fetchUser(id) {
+    return new Promise(resolve => {
+        setTimeout(() => resolve({ id, name: 'John' }), 1000);
+    });
+}
+
+async function fetchPosts(userId) {
+    return new Promise(resolve => {
+        setTimeout(() => resolve(['Post 1', 'Post 2']), 1000);
+    });
+}
+
+async function main() {
+    const [user, posts] = await Promise.all([
+        fetchUser(1),
+        fetchPosts(1)
+    ]);
+    console.log({ user, posts });
+}
+                </div>
+                <button onclick="runParallelExecution()">Run Example</button>
+                <div id="parallelExecutionOutput" class="output"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Helper function to show tab content
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Helper function to display output
+        function displayOutput(elementId, output) {
+            const element = document.getElementById(elementId);
+            element.textContent = output;
+        }
+
+        // Basic Callback Example
+        function runBasicCallback() {
+            const output = document.getElementById('basicCallbackOutput');
+            output.innerHTML = '<div class="spinner"></div> Loading...';
+
+            function fetchData(callback) {
+                setTimeout(() => {
+                    callback('Data received');
+                }, 1000);
+            }
+
+            fetchData((data) => {
+                output.textContent = data;
+            });
+        }
+
+        // Callback Hell Example
+        function runCallbackHell() {
+            const output = document.getElementById('callbackHellOutput');
+            output.innerHTML = '<div class="spinner"></div> Loading...';
+
+            function fetchUser(id, callback) {
+                setTimeout(() => {
+                    callback({ id, name: 'John' });
+                }, 1000);
+            }
+
+            function fetchPosts(userId, callback) {
+                setTimeout(() => {
+                    callback(['Post 1', 'Post 2']);
+                }, 1000);
+            }
+
+            fetchUser(1, (user) => {
+                fetchPosts(user.id, (posts) => {
+                    output.textContent = JSON.stringify({ user, posts }, null, 2);
+                });
+            });
+        }
+
+        // Basic Promise Example
+        function runBasicPromise() {
+            const output = document.getElementById('basicPromiseOutput');
+            output.innerHTML = '<div class="spinner"></div> Loading...';
+
+            const promise = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve('Promise resolved');
+                }, 1000);
+            });
+
+            promise.then(result => {
+                output.textContent = result;
+            });
+        }
+
+        // Promise Chaining Example
+        function runPromiseChaining() {
+            const output = document.getElementById('promiseChainingOutput');
+            output.innerHTML = '<div class="spinner"></div> Loading...';
+
+            function fetchUser(id) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve({ id, name: 'John' });
+                    }, 1000);
+                });
+            }
+
+            function fetchPosts(userId) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve(['Post 1', 'Post 2']);
+                    }, 1000);
+                });
+            }
+
+            fetchUser(1)
+                .then(user => fetchPosts(user.id))
+                .then(posts => {
+                    output.textContent = JSON.stringify(posts, null, 2);
+                });
+        }
+
+        // Promise.all Example
+        function runPromiseAll() {
+            const output = document.getElementById('promiseAllOutput');
+            output.innerHTML = '<div class="spinner"></div> Loading...';
+
+            const promise1 = Promise.resolve(1);
+            const promise2 = Promise.resolve(2);
+            const promise3 = Promise.resolve(3);
+
+            Promise.all([promise1, promise2, promise3])
+                .then(results => {
+                    output.textContent = JSON.stringify(results, null, 2);
+                });
+        }
+
+        // Basic Async/Await Example
+        async function runBasicAsyncAwait() {
+            const output = document.getElementById('basicAsyncAwaitOutput');
+            output.innerHTML = '<div class="spinner"></div> Loading...';
+
+            async function fetchData() {
+                const response = await new Promise(resolve => {
+                    setTimeout(() => resolve('Data received'), 1000);
+                });
+                return response;
+            }
+
+            const data = await fetchData();
+            output.textContent = data;
+        }
+
+        // Error Handling Example
+        async function runErrorHandling() {
+            const output = document.getElementById('errorHandlingOutput');
+            output.innerHTML = '<div class="spinner"></div> Loading...';
+
+            async function fetchData() {
+                try {
+                    const response = await new Promise((resolve, reject) => {
+                        setTimeout(() => reject('Error occurred'), 1000);
+                    });
+                    return response;
+                } catch (error) {
+                    return error;
+                }
+            }
+
+            const result = await fetchData();
+            output.textContent = result;
+        }
+
+        // Parallel Execution Example
+        async function runParallelExecution() {
+            const output = document.getElementById('parallelExecutionOutput');
+            output.innerHTML = '<div class="spinner"></div> Loading...';
+
+            async function fetchUser(id) {
+                return new Promise(resolve => {
+                    setTimeout(() => resolve({ id, name: 'John' }), 1000);
+                });
+            }
+
+            async function fetchPosts(userId) {
+                return new Promise(resolve => {
+                    setTimeout(() => resolve(['Post 1', 'Post 2']), 1000);
+                });
+            }
+
+            const [user, posts] = await Promise.all([
+                fetchUser(1),
+                fetchPosts(1)
+            ]);
+            output.textContent = JSON.stringify({ user, posts }, null, 2);
+        }
+    </script>
+</body>
+</html> 

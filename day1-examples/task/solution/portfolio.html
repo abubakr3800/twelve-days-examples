@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        /* ======================
+           GLOBAL STYLES
+           ====================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* ======================
+           HEADER STYLES
+           ====================== */
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ======================
+           ABOUT ME SECTION
+           ====================== */
+        .about-section {
+            padding: 4rem 2rem;
+        }
+
+        .profile-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .profile-header {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid white;
+            position: absolute;
+            bottom: -75px;
+            left: 50%;
+            transform: translateX(-50%);
+            object-fit: cover;
+        }
+
+        .profile-content {
+            padding: 100px 2rem 2rem;
+            text-align: center;
+        }
+
+        /* ======================
+           SKILLS SECTION
+           ====================== */
+        .skills-section {
+            padding: 4rem 2rem;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .skill-card {
+            flex: 1 1 250px;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .skill-card.frontend {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+
+        .skill-card.backend {
+            background-color: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+        }
+
+        .skill-card.tools {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+
+        /* ======================
+           CONTACT FORM
+           ====================== */
+        .contact-section {
+            padding: 4rem 2rem;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        input:invalid {
+            border-color: #e74c3c;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* ======================
+           RESPONSIVE DESIGN
+           ====================== */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .profile-card {
+                margin: 0 1rem;
+            }
+
+            .skill-card {
+                flex: 1 1 100%;
+            }
+        }
+
+        /* ======================
+           DARK MODE TOGGLE
+           ====================== */
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+
+        .dark-mode .profile-card,
+        .dark-mode .skill-card,
+        .dark-mode .contact-form {
+            background-color: #2d2d2d;
+            color: #fff;
+        }
+
+        .dark-mode input,
+        .dark-mode textarea {
+            background-color: #3d3d3d;
+            color: #fff;
+            border-color: #4d4d4d;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="header-content">
+            <h1>John Doe</h1>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- About Me Section -->
+    <section id="about" class="about-section">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="https://placehold.co/400x400" alt="Profile Picture" class="profile-image">
+            </div>
+            <div class="profile-content">
+                <h2>John Doe</h2>
+                <p>Frontend Developer</p>
+                <p>Passionate about creating beautiful and functional web experiences. 
+                   Specializing in modern web technologies and responsive design.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills-section">
+        <h2>My Skills</h2>
+        <div class="skills-grid">
+            <div class="skill-card frontend">
+                <h3>Frontend Development</h3>
+                <p>HTML5, CSS3, JavaScript</p>
+                <p>React, Vue.js</p>
+                <p>Responsive Design</p>
+            </div>
+            <div class="skill-card backend">
+                <h3>Backend Development</h3>
+                <p>Node.js</p>
+                <p>Express</p>
+                <p>MongoDB</p>
+            </div>
+            <div class="skill-card tools">
+                <h3>Tools & Others</h3>
+                <p>Git & GitHub</p>
+                <p>VS Code</p>
+                <p>Figma</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section id="contact" class="contact-section">
+        <h2>Contact Me</h2>
+        <form class="contact-form">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required 
+                          placeholder="Enter your message"></textarea>
+            </div>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Dark Mode Toggle -->
+    <button class="theme-toggle" onclick="toggleDarkMode()">🌙</button>
+
+    <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+
+        // Form Validation
+        const form = document.querySelector('.contact-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add your form submission logic here
+            alert('Form submitted successfully!');
+        });
+    </script>
+</body>
+</html> 

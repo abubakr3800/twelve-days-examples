@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <style>
+        /* Add your existing styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .weather-card {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .weather-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .temperature {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .forecast-card {
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 4px;
+            color: white;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.success {
+            background-color: #28a745;
+        }
+
+        .notification.error {
+            background-color: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        li button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Dashboard</h1>
+
+        <!-- Weather Search Section -->
+        <section id="weather-search">
+            <h2>Weather Search</h2>
+            <div class="search-container">
+                <input type="text" id="locationInput" placeholder="Enter location...">
+                <button id="searchButton">Search</button>
+            </div>
+            <div id="searchHistory"></div>
+        </section>
+
+        <!-- Current Weather Section -->
+        <section id="current-weather">
+            <h2>Current Weather</h2>
+            <div id="currentWeatherDisplay" class="weather-card">
+                <!-- Weather information will be displayed here -->
+            </div>
+        </section>
+
+        <!-- 5-Day Forecast Section -->
+        <section id="forecast">
+            <h2>5-Day Forecast</h2>
+            <div id="forecastDisplay" class="forecast-grid">
+                <!-- Forecast information will be displayed here -->
+            </div>
+        </section>
+
+        <!-- Favorites Section -->
+        <section id="favorites">
+            <h2>Favorite Locations</h2>
+            <div id="favoritesList">
+                <!-- Favorite locations will be displayed here -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Weather class
+        class Weather {
+            constructor(data) {
+                this.temperature = data.temperature;
+                this.condition = data.condition;
+                this.humidity = data.humidity;
+                this.windSpeed = data.windSpeed;
+                this.icon = data.icon;
+                this.location = data.location;
+                this.country = data.country;
+                this.timestamp = new Date();
+            }
+
+            getFormattedTemperature() {
+                return `${this.temperature}°C`;
+            }
+
+            getFormattedTime() {
+                return this.timestamp.toLocaleTimeString();
+            }
+        }
+
+        // Forecast class
+        class Forecast extends Weather {
+            constructor(data) {
+                super(data);
+                this.date = new Date(data.date);
+                this.precipitation = data.precipitation;
+                this.maxTemp = data.maxTemp;
+                this.minTemp = data.minTemp;
+            }
+
+            getFormattedDate() {
+                return this.date.toLocaleDateString();
+            }
+
+            getFormattedTemperature() {
+                return `${this.minTemp}°C - ${this.maxTemp}°C`;
+            }
+        }
+
+        // Storage Service
+        class StorageService {
+            constructor() {
+                this.searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+                this.favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+            }
+
+            addToSearchHistory(location) {
+                if (!this.searchHistory.includes(location)) {
+                    this.searchHistory.unshift(location);
+                    this.searchHistory = this.searchHistory.slice(0, 5);
+                    localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory));
+                }
+            }
+
+            addToFavorites(location) {
+                if (!this.favorites.includes(location)) {
+                    this.favorites.push(location);
+                    localStorage.setItem('favorites', JSON.stringify(this.favorites));
+                }
+            }
+
+            removeFromFavorites(location) {
+                this.favorites = this.favorites.filter(fav => fav !== location);
+                localStorage.setItem('favorites', JSON.stringify(this.favorites));
+            }
+
+            getSearchHistory() {
+                return this.searchHistory;
+            }
+
+            getFavorites() {
+                return this.favorites;
+            }
+        }
+
+        // Weather Service
+        class WeatherService {
+            constructor() {
+                this.apiKey = '2fa66e2f45f6a810910a379b30eeb032'; // Replace with your OpenWeatherMap API key
+                this.baseUrl = 'https://api.openweathermap.org/data/2.5';
+            }
+
+            async getCurrentWeather(location) {
+                try {
+                    const response = await fetch(
+                        `${this.baseUrl}/weather?q=${location}&appid=${this.apiKey}&units=metric`
+                    );
+                    if (!response.ok) throw new Error('Weather data not found');
+                    const data = await response.json();
+                    return new Weather({
+                        temperature: data.main.temp,
+                        condition: data.weather[0].main,
+                        humidity: data.main.humidity,
+                        windSpeed: data.wind.speed,
+                        icon: data.weather[0].icon,
+                        location: data.name,
+                        country: data.sys.country
+                    });
+                } catch (error) {
+                    throw new Error('Failed to fetch weather data');
+                }
+            }
+
+            async getForecast(location) {
+                try {
+                    const response = await fetch(
+                        `${this.baseUrl}/forecast?q=${location}&appid=${this.apiKey}&units=metric`
+                    );
+                    if (!response.ok) throw new Error('Forecast data not found');
+                    const data = await response.json();
+                    return data.list
+                        .filter(item => item.dt_txt.includes('12:00:00'))
+                        .map(item => new Forecast({
+                            temperature: item.main.temp,
+                            condition: item.weather[0].main,
+                            humidity: item.main.humidity,
+                            windSpeed: item.wind.speed,
+                            icon: item.weather[0].icon,
+                            date: item.dt_txt,
+                            precipitation: item.pop,
+                            maxTemp: item.main.temp_max,
+                            minTemp: item.main.temp_min
+                        }));
+                } catch (error) {
+                    throw new Error('Failed to fetch forecast data');
+                }
+            }
+        }
+
+        // UI Manager
+        class UIManager {
+            constructor() {
+                this.weatherService = new WeatherService();
+                this.storageService = new StorageService();
+                this.setupEventListeners();
+                this.loadSearchHistory();
+                this.loadFavorites();
+            }
+
+            setupEventListeners() {
+                const searchInput = document.getElementById('locationInput');
+                const searchButton = document.getElementById('searchButton');
+                
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.searchWeather();
+                });
+                
+                searchButton.addEventListener('click', () => this.searchWeather());
+            }
+
+            async searchWeather() {
+                const location = document.getElementById('locationInput').value.trim();
+                if (!location) return;
+
+                try {
+                    this.showLoading();
+                    const weather = await this.weatherService.getCurrentWeather(location);
+                    const forecast = await this.weatherService.getForecast(location);
+                    
+                    this.displayCurrentWeather(weather);
+                    this.displayForecast(forecast);
+                    this.storageService.addToSearchHistory(location);
+                    this.loadSearchHistory();
+                    this.showNotification('Weather data updated successfully');
+                } catch (error) {
+                    this.showNotification(error.message, 'error');
+                } finally {
+                    this.hideLoading();
+                }
+            }
+
+            displayCurrentWeather(weather) {
+                const display = document.getElementById('currentWeatherDisplay');
+                display.innerHTML = `
+                    <div style="display: flex; align-items: center;">
+                        <img src="http://openweathermap.org/img/wn/${weather.icon}@2x.png" 
+                             alt="${weather.condition}" class="weather-icon">
+                        <div>
+                            <h3>${weather.location}, ${weather.country}</h3>
+                            <div class="temperature">${weather.getFormattedTemperature()}</div>
+                        </div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <strong>Condition:</strong> ${weather.condition}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Humidity:</strong> ${weather.humidity}%
+                        </div>
+                        <div class="detail-item">
+                            <strong>Wind Speed:</strong> ${weather.windSpeed} m/s
+                        </div>
+                        <div class="detail-item">
+                            <strong>Last Updated:</strong> ${weather.getFormattedTime()}
+                        </div>
+                    </div>
+                    <button onclick="uiManager.addToFavorites('${weather.location}')" 
+                            style="margin-top: 10px;">
+                        Add to Favorites
+                    </button>
+                `;
+            }
+
+            displayForecast(forecast) {
+                const display = document.getElementById('forecastDisplay');
+                display.innerHTML = forecast.map(day => `
+                    <div class="forecast-card">
+                        <div class="forecast-date">${day.getFormattedDate()}</div>
+                        <img src="http://openweathermap.org/img/wn/${day.icon}@2x.png" 
+                             alt="${day.condition}" class="weather-icon">
+                        <div class="forecast-temp">${day.getFormattedTemperature()}</div>
+                        <div class="forecast-condition">${day.condition}</div>
+                        <div class="forecast-details">
+                            <div>Humidity: ${day.humidity}%</div>
+                            <div>Wind: ${day.windSpeed} m/s</div>
+                            <div>Precipitation: ${(day.precipitation * 100).toFixed(0)}%</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            loadSearchHistory() {
+                const history = this.storageService.getSearchHistory();
+                const container = document.getElementById('searchHistory');
+                container.innerHTML = history.length ? `
+                    <h3>Recent Searches</h3>
+                    <ul>
+                        ${history.map(location => `
+                            <li>
+                                <button onclick="uiManager.searchLocation('${location}')">
+                                    ${location}
+                                </button>
+                            </li>
+                        `).join('')}
+                    </ul>
+                ` : '';
+            }
+
+            loadFavorites() {
+                const favorites = this.storageService.getFavorites();
+                const container = document.getElementById('favoritesList');
+                container.innerHTML = favorites.length ? `
+                    <ul>
+                        ${favorites.map(location => `
+                            <li>
+                                <button onclick="uiManager.searchLocation('${location}')">
+                                    ${location}
+                                </button>
+                                <button onclick="uiManager.removeFromFavorites('${location}')">
+                                    Remove
+                                </button>
+                            </li>
+                        `).join('')}
+                    </ul>
+                ` : '<p>No favorite locations yet</p>';
+            }
+
+            searchLocation(location) {
+                document.getElementById('locationInput').value = location;
+                this.searchWeather();
+            }
+
+            addToFavorites(location) {
+                this.storageService.addToFavorites(location);
+                this.loadFavorites();
+                this.showNotification('Location added to favorites');
+            }
+
+            removeFromFavorites(location) {
+                this.storageService.removeFromFavorites(location);
+                this.loadFavorites();
+                this.showNotification('Location removed from favorites');
+            }
+
+            showLoading() {
+                const loading = document.createElement('div');
+                loading.id = 'loading';
+                loading.innerHTML = 'Loading...';
+                document.body.appendChild(loading);
+            }
+
+            hideLoading() {
+                const loading = document.getElementById('loading');
+                if (loading) loading.remove();
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000);
+            }
+        }
+
+        // Initialize the UI Manager
+        const uiManager = new UIManager();
+    </script>
+</body>
+</html> 

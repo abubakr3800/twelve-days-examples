@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 8 - Error Handling & Debugging (Enhanced)</title>
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        /* Container for content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Section styling */
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Typography */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Example box styling */
+        .example {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Code block styling */
+        .code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        /* Button styling */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Output area styling */
+        .output {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        /* Status colors */
+        .error {
+            color: var(--error-color);
+        }
+
+        .success {
+            color: var(--secondary-color);
+        }
+
+        .warning {
+            color: var(--warning-color);
+        }
+
+        /* Tab navigation */
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 0 4px 4px 4px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Error Handling & Debugging (Enhanced)</h1>
+
+        <!-- Error Types Section -->
+        <section class="section">
+            <h2>Error Types</h2>
+            
+            <!-- Syntax Error Example -->
+            <div class="example">
+                <h3>Syntax Error</h3>
+                <div class="code">
+// Syntax Error
+// - Occurs during parsing
+// - Prevents code execution
+// - Easy to spot in development
+function example() {
+    console.log('Hello'  // Missing closing parenthesis
+}
+                </div>
+                <button onclick="runSyntaxError()">Run Example</button>
+                <div id="syntaxErrorOutput" class="output"></div>
+            </div>
+
+            <!-- Reference Error Example -->
+            <div class="example">
+                <h3>Reference Error</h3>
+                <div class="code">
+// Reference Error
+// - Occurs when variable is not defined
+// - Common in scope issues
+// - Can be caught with try-catch
+function example() {
+    console.log(undefinedVariable);
+}
+                </div>
+                <button onclick="runReferenceError()">Run Example</button>
+                <div id="referenceErrorOutput" class="output"></div>
+            </div>
+
+            <!-- Type Error Example -->
+            <div class="example">
+                <h3>Type Error</h3>
+                <div class="code">
+// Type Error
+// - Occurs when operation is performed on wrong type
+// - Common with null/undefined
+// - Can be prevented with type checking
+function example() {
+    const num = 42;
+    num.toUpperCase();
+}
+                </div>
+                <button onclick="runTypeError()">Run Example</button>
+                <div id="typeErrorOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Error Handling Section -->
+        <section class="section">
+            <h2>Error Handling</h2>
+            
+            <!-- Try-Catch Example -->
+            <div class="example">
+                <h3>Try-Catch</h3>
+                <div class="code">
+// Try-Catch
+// - Catches runtime errors
+// - Prevents program crash
+// - Allows error recovery
+try {
+    throw new Error('Custom error');
+} catch (error) {
+    console.error(error.message);
+}
+                </div>
+                <button onclick="runTryCatch()">Run Example</button>
+                <div id="tryCatchOutput" class="output"></div>
+            </div>
+
+            <!-- Finally Block Example -->
+            <div class="example">
+                <h3>Finally Block</h3>
+                <div class="code">
+// Finally Block
+// - Always executes
+// - Used for cleanup
+// - Runs after try/catch
+try {
+    // Some code
+} catch (error) {
+    // Error handling
+} finally {
+    // Cleanup code
+}
+                </div>
+                <button onclick="runFinallyBlock()">Run Example</button>
+                <div id="finallyBlockOutput" class="output"></div>
+            </div>
+
+            <!-- Custom Error Example -->
+            <div class="example">
+                <h3>Custom Error</h3>
+                <div class="code">
+// Custom Error
+// - Extends Error class
+// - Adds custom properties
+// - Provides specific error types
+class ValidationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'ValidationError';
+    }
+}
+                </div>
+                <button onclick="runCustomError()">Run Example</button>
+                <div id="customErrorOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Debugging Section -->
+        <section class="section">
+            <h2>Debugging</h2>
+            
+            <!-- Console Methods Example -->
+            <div class="example">
+                <h3>Console Methods</h3>
+                <div class="code">
+// Console Methods
+// - Different log levels
+// - Formatting options
+// - Performance tracking
+console.log('Info message');
+console.warn('Warning message');
+console.error('Error message');
+console.time('Operation');
+// ... code ...
+console.timeEnd('Operation');
+                </div>
+                <button onclick="runConsoleMethods()">Run Example</button>
+                <div id="consoleMethodsOutput" class="output"></div>
+            </div>
+
+            <!-- Debugger Statement Example -->
+            <div class="example">
+                <h3>Debugger Statement</h3>
+                <div class="code">
+// Debugger Statement
+// - Pauses execution
+// - Opens debugger
+// - Allows inspection
+function example() {
+    let x = 1;
+    debugger;
+    x = 2;
+    return x;
+}
+                </div>
+                <button onclick="runDebuggerStatement()">Run Example</button>
+                <div id="debuggerStatementOutput" class="output"></div>
+            </div>
+
+            <!-- Source Maps Example -->
+            <div class="example">
+                <h3>Source Maps</h3>
+                <div class="code">
+// Source Maps
+// - Maps minified code to source
+// - Helps debugging
+// - Requires configuration
+//# sourceMappingURL=app.js.map
+                </div>
+                <button onclick="runSourceMaps()">Run Example</button>
+                <div id="sourceMapsOutput" class="output"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Helper function to show tab content
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Helper function to display output
+        function displayOutput(elementId, output) {
+            const element = document.getElementById(elementId);
+            element.textContent = output;
+        }
+
+        // Syntax Error Example
+        function runSyntaxError() {
+            try {
+                eval('function example() { console.log("Hello" }');
+            } catch (error) {
+                displayOutput('syntaxErrorOutput', error.message);
+            }
+        }
+
+        // Reference Error Example
+        function runReferenceError() {
+            try {
+                console.log(undefinedVariable);
+            } catch (error) {
+                displayOutput('referenceErrorOutput', error.message);
+            }
+        }
+
+        // Type Error Example
+        function runTypeError() {
+            try {
+                const num = 42;
+                num.toUpperCase();
+            } catch (error) {
+                displayOutput('typeErrorOutput', error.message);
+            }
+        }
+
+        // Try-Catch Example
+        function runTryCatch() {
+            try {
+                throw new Error('Custom error');
+            } catch (error) {
+                displayOutput('tryCatchOutput', error.message);
+            }
+        }
+
+        // Finally Block Example
+        function runFinallyBlock() {
+            let output = '';
+            try {
+                output += 'Try block executed\n';
+                throw new Error('Test error');
+            } catch (error) {
+                output += 'Catch block executed\n';
+            } finally {
+                output += 'Finally block executed';
+            }
+            displayOutput('finallyBlockOutput', output);
+        }
+
+        // Custom Error Example
+        function runCustomError() {
+            class ValidationError extends Error {
+                constructor(message) {
+                    super(message);
+                    this.name = 'ValidationError';
+                }
+            }
+
+            try {
+                throw new ValidationError('Invalid input');
+            } catch (error) {
+                displayOutput('customErrorOutput', `${error.name}: ${error.message}`);
+            }
+        }
+
+        // Console Methods Example
+        function runConsoleMethods() {
+            const output = [];
+            console.log = (msg) => output.push(`LOG: ${msg}`);
+            console.warn = (msg) => output.push(`WARN: ${msg}`);
+            console.error = (msg) => output.push(`ERROR: ${msg}`);
+
+            console.log('Info message');
+            console.warn('Warning message');
+            console.error('Error message');
+
+            displayOutput('consoleMethodsOutput', output.join('\n'));
+        }
+
+        // Debugger Statement Example
+        function runDebuggerStatement() {
+            function example() {
+                let x = 1;
+                // debugger; // Commented out for demo
+                x = 2;
+                return x;
+            }
+            displayOutput('debuggerStatementOutput', example().toString());
+        }
+
+        // Source Maps Example
+        function runSourceMaps() {
+            displayOutput('sourceMapsOutput', 'Source maps require build configuration and are not directly executable in the browser.');
+        }
+    </script>
+</body>
+</html> 

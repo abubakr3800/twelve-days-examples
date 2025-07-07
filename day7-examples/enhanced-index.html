@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 7 - Modern JavaScript (ES6+) Examples</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #ffffff;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+            --hover-color: #2980b9;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --code-bg: #f8f9fa;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #1a1a1a;
+            --text-color: #ecf0f1;
+            --border-color: #2c3e50;
+            --hover-color: #2980b9;
+            --code-bg: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--background-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 10px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: var(--code-bg);
+        }
+
+        .success {
+            color: var(--success-color);
+        }
+
+        .error {
+            color: var(--error-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--background-color);
+        }
+
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        #themeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            color: white;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .success-notification {
+            background-color: var(--success-color);
+        }
+
+        .error-notification {
+            background-color: var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <button id="themeToggle" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    <h1>Day 7 - Modern JavaScript (ES6+) Examples</h1>
+
+    <!-- ===== ES6+ SYNTAX ===== -->
+    <section id="es6-syntax">
+        <h2>ES6+ Syntax Features</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Arrow Functions</h3>
+                <pre><code>// Traditional function
+function add(a, b) { 
+    return a + b; 
+}
+
+// Arrow function
+const add = (a, b) => a + b;
+
+// Arrow function with block
+const multiply = (a, b) => {
+    const result = a * b;
+    return result;
+};</code></pre>
+                <button onclick="demoArrowFunctions()">Test Arrow Functions</button>
+                <div id="arrowResult" class="result"></div>
+            </div>
+
+            <div class="card">
+                <h3>Destructuring</h3>
+                <pre><code>// Object destructuring
+const user = { 
+    name: 'Alice', 
+    age: 30,
+    address: {
+        city: 'New York',
+        country: 'USA'
+    }
+};
+const { name, age, address: { city } } = user;
+
+// Array destructuring
+const colors = ['red', 'green', 'blue'];
+const [first, second, ...rest] = colors;</code></pre>
+                <button onclick="demoDestructuring()">Test Destructuring</button>
+                <div id="destructuringResult" class="result"></div>
+            </div>
+
+            <div class="card">
+                <h3>Template Literals</h3>
+                <pre><code>const name = 'Bob';
+const age = 25;
+const message = `Hello ${name}!
+You are ${age} years old.
+Next year you'll be ${age + 1}.`;</code></pre>
+                <button onclick="demoTemplateLiterals()">Test Template Literals</button>
+                <div id="templateResult" class="result"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== MODULES & CLASSES ===== -->
+    <section id="modules-classes">
+        <h2>Modules & Classes</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>ES6 Classes</h3>
+                <pre><code>class Animal {
+    #privateField = 'private';
+    
+    constructor(name) {
+        this.name = name;
+    }
+    
+    speak() {
+        return `${this.name} makes a noise.`;
+    }
+    
+    getPrivateField() {
+        return this.#privateField;
+    }
+}
+
+class Dog extends Animal {
+    speak() {
+        return `${this.name} barks.`;
+    }
+}</code></pre>
+                <button onclick="demoClasses()">Test Classes</button>
+                <div id="classResult" class="result"></div>
+            </div>
+
+            <div class="card">
+                <h3>Modules</h3>
+                <pre><code>// math.js
+export const add = (a, b) => a + b;
+export const multiply = (a, b) => a * b;
+export default class Calculator {
+    add(a, b) { return a + b; }
+    multiply(a, b) { return a * b; }
+}
+
+// app.js
+import Calculator, { add, multiply } from './math.js';</code></pre>
+                <button onclick="importModule()">Test Module Import</button>
+                <div id="moduleResult" class="result"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ARRAY METHODS ===== -->
+    <section id="array-methods">
+        <h2>Advanced Array Methods</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>map/filter/reduce</h3>
+                <pre><code>const numbers = [1, 2, 3, 4, 5];
+
+// map: transform each item
+const squared = numbers.map(n => n * n);
+
+// filter: select items
+const evens = numbers.filter(n => n % 2 === 0);
+
+// reduce: accumulate values
+const sum = numbers.reduce((total, n) => total + n, 0);
+
+// chaining
+const result = numbers
+    .filter(n => n % 2 === 0)
+    .map(n => n * n)
+    .reduce((sum, n) => sum + n, 0);</code></pre>
+                <button onclick="demoArrayMethods()">Test Array Methods</button>
+                <div id="arrayResults" class="result"></div>
+            </div>
+
+            <div class="card">
+                <h3>find/findIndex/some/every</h3>
+                <pre><code>const users = [
+    { id: 1, name: 'Alice', active: true },
+    { id: 2, name: 'Bob', active: false },
+    { id: 3, name: 'Charlie', active: true }
+];
+
+// find: first matching item
+const activeUser = users.find(user => user.active);
+
+// findIndex: index of first match
+const activeIndex = users.findIndex(user => user.active);
+
+// some: any items match?
+const hasActive = users.some(user => user.active);
+
+// every: all items match?
+const allActive = users.every(user => user.active);</code></pre>
+                <button onclick="demoArraySearchMethods()">Test Search Methods</button>
+                <div id="arraySearchResults" class="result"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SHOPPING CART PROJECT ===== -->
+    <section id="shopping-cart">
+        <h2>Shopping Cart Project</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Add Items</h3>
+                <input type="text" id="itemName" placeholder="Item name">
+                <input type="number" id="itemPrice" placeholder="Price" min="0" step="0.01">
+                <button onclick="addToCart()">Add to Cart</button>
+            </div>
+
+            <div class="card">
+                <h3>Your Cart</h3>
+                <div id="shoppingCart">
+                    <ul id="cartItems"></ul>
+                    <p>Subtotal: $<span id="cartSubtotal">0.00</span></p>
+                    <p>Discount: $<span id="cartDiscount">0.00</span></p>
+                    <p>Total: $<span id="cartTotal">0.00</span></p>
+                    <button onclick="applyDiscount()">Apply 10% Discount</button>
+                    <button onclick="clearCart()">Clear Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="module">
+        // Module example
+        export const add = (a, b) => a + b;
+        export const multiply = (a, b) => a * b;
+        export default class Calculator {
+            add(a, b) { return a + b; }
+            multiply(a, b) { return a * b; }
+        }
+    </script>
+
+    <script>
+        // Theme handling
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
+
+        // Module import demo
+        async function importModule() {
+            try {
+                // Create module code as a data URL
+                const moduleCode = `
+                    export const add = (a, b) => a + b;
+                    export const multiply = (a, b) => a * b;
+                    export default class Calculator {
+                        add(a, b) { return a + b; }
+                        multiply(a, b) { return a * b; }
+                    }
+                `;
+                const moduleBlob = new Blob([moduleCode], { type: 'application/javascript' });
+                const moduleUrl = URL.createObjectURL(moduleBlob);
+                
+                const module = await import(moduleUrl);
+                const result = document.getElementById('moduleResult');
+                
+                // Test the imported functions
+                const addResult = module.add(5, 3);
+                const multiplyResult = module.multiply(4, 2);
+                const calculator = new module.default();
+                const calcAddResult = calculator.add(10, 5);
+                const calcMultiplyResult = calculator.multiply(6, 3);
+                
+                result.innerHTML = `
+                    <p>Imported add(5, 3) = ${addResult}</p>
+                    <p>Imported multiply(4, 2) = ${multiplyResult}</p>
+                    <p>Calculator add(10, 5) = ${calcAddResult}</p>
+                    <p>Calculator multiply(6, 3) = ${calcMultiplyResult}</p>
+                `;
+                result.classList.add('success');
+                
+                // Clean up the object URL
+                URL.revokeObjectURL(moduleUrl);
+            } catch (error) {
+                console.error('Module import error:', error);
+                showNotification('Error importing module: ' + error.message, 'error');
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}-notification`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // ===== ES6+ SYNTAX DEMOS =====
+        function demoArrowFunctions() {
+            try {
+                // Traditional function
+                function traditionalAdd(a, b) { 
+                    return a + b; 
+                }
+                
+                // Arrow function
+                const arrowAdd = (a, b) => a + b;
+                
+                // Arrow function with block
+                const multiply = (a, b) => {
+                    const result = a * b;
+                    return result;
+                };
+                
+                const result = document.getElementById('arrowResult');
+                result.innerHTML = `
+                    <p>Traditional: 2 + 3 = ${traditionalAdd(2, 3)}</p>
+                    <p>Arrow: 2 + 3 = ${arrowAdd(2, 3)}</p>
+                    <p>Multiply: 2 * 3 = ${multiply(2, 3)}</p>
+                `;
+                result.classList.add('success');
+            } catch (error) {
+                showNotification('Error in arrow functions demo', 'error');
+            }
+        }
+
+        function demoDestructuring() {
+            try {
+                // Object destructuring
+                const user = { 
+                    name: 'Alice', 
+                    age: 30,
+                    address: {
+                        city: 'New York',
+                        country: 'USA'
+                    }
+                };
+                const { name, age, address: { city } } = user;
+                
+                // Array destructuring
+                const colors = ['red', 'green', 'blue'];
+                const [first, second, ...rest] = colors;
+                
+                const result = document.getElementById('destructuringResult');
+                result.innerHTML = `
+                    <p>User: ${name}, ${age} years</p>
+                    <p>City: ${city}</p>
+                    <p>Colors: ${first}, ${second}, ${rest.join(', ')}</p>
+                `;
+                result.classList.add('success');
+            } catch (error) {
+                showNotification('Error in destructuring demo', 'error');
+            }
+        }
+
+        function demoTemplateLiterals() {
+            try {
+                const name = 'Bob';
+                const age = 25;
+                const message = `Hello ${name}!
+You are ${age} years old.
+Next year you'll be ${age + 1}.`;
+                
+                const result = document.getElementById('templateResult');
+                result.innerHTML = `<pre>${message}</pre>`;
+                result.classList.add('success');
+            } catch (error) {
+                showNotification('Error in template literals demo', 'error');
+            }
+        }
+
+        // ===== CLASSES DEMO =====
+        function demoClasses() {
+            try {
+                class Animal {
+                    #privateField = 'private';
+                    
+                    constructor(name) {
+                        this.name = name;
+                    }
+                    
+                    speak() {
+                        return `${this.name} makes a noise.`;
+                    }
+                    
+                    getPrivateField() {
+                        return this.#privateField;
+                    }
+                }
+
+                class Dog extends Animal {
+                    speak() {
+                        return `${this.name} barks.`;
+                    }
+                }
+                
+                const animal = new Animal('Generic Animal');
+                const dog = new Dog('Rex');
+                
+                const result = document.getElementById('classResult');
+                result.innerHTML = `
+                    <p>${animal.speak()}</p>
+                    <p>${dog.speak()}</p>
+                    <p>Private field: ${animal.getPrivateField()}</p>
+                `;
+                result.classList.add('success');
+            } catch (error) {
+                showNotification('Error in classes demo', 'error');
+            }
+        }
+
+        // ===== ARRAY METHODS DEMO =====
+        function demoArrayMethods() {
+            try {
+                const numbers = [1, 2, 3, 4, 5];
+                
+                // map: transform each item
+                const squared = numbers.map(n => n * n);
+                
+                // filter: select items
+                const evens = numbers.filter(n => n % 2 === 0);
+                
+                // reduce: accumulate values
+                const sum = numbers.reduce((total, n) => total + n, 0);
+                
+                // chaining
+                const result = numbers
+                    .filter(n => n % 2 === 0)
+                    .map(n => n * n)
+                    .reduce((sum, n) => sum + n, 0);
+                
+                const output = document.getElementById('arrayResults');
+                output.innerHTML = `
+                    <p>Squared: ${squared.join(', ')}</p>
+                    <p>Evens: ${evens.join(', ')}</p>
+                    <p>Sum: ${sum}</p>
+                    <p>Chained result: ${result}</p>
+                `;
+                output.classList.add('success');
+            } catch (error) {
+                showNotification('Error in array methods demo', 'error');
+            }
+        }
+
+        function demoArraySearchMethods() {
+            try {
+                const users = [
+                    { id: 1, name: 'Alice', active: true },
+                    { id: 2, name: 'Bob', active: false },
+                    { id: 3, name: 'Charlie', active: true }
+                ];
+                
+                // find: first matching item
+                const activeUser = users.find(user => user.active);
+                
+                // findIndex: index of first match
+                const activeIndex = users.findIndex(user => user.active);
+                
+                // some: any items match?
+                const hasActive = users.some(user => user.active);
+                
+                // every: all items match?
+                const allActive = users.every(user => user.active);
+                
+                const output = document.getElementById('arraySearchResults');
+                output.innerHTML = `
+                    <p>First active user: ${activeUser.name}</p>
+                    <p>First active index: ${activeIndex}</p>
+                    <p>Has active users: ${hasActive}</p>
+                    <p>All users active: ${allActive}</p>
+                `;
+                output.classList.add('success');
+            } catch (error) {
+                showNotification('Error in array search methods demo', 'error');
+            }
+        }
+
+        // ===== SHOPPING CART =====
+        let cart = [];
+        let discount = 0;
+
+        function addToCart() {
+            try {
+                const nameInput = document.getElementById('itemName');
+                const priceInput = document.getElementById('itemPrice');
+                
+                const name = nameInput.value.trim();
+                const price = parseFloat(priceInput.value);
+                
+                if (!name || isNaN(price) || price <= 0) {
+                    showNotification('Please enter valid item name and price', 'error');
+                    return;
+                }
+                
+                cart.push({ name, price });
+                updateCartDisplay();
+                
+                nameInput.value = '';
+                priceInput.value = '';
+                showNotification('Item added to cart');
+            } catch (error) {
+                showNotification('Error adding item to cart', 'error');
+            }
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+            const discountAmount = subtotal * discount;
+            const total = subtotal - discountAmount;
+            
+            cartItems.innerHTML = cart.map(item => `
+                <li>
+                    ${item.name} - $${item.price.toFixed(2)}
+                    <button onclick="removeFromCart('${item.name}')">Remove</button>
+                </li>
+            `).join('');
+            
+            document.getElementById('cartSubtotal').textContent = subtotal.toFixed(2);
+            document.getElementById('cartDiscount').textContent = discountAmount.toFixed(2);
+            document.getElementById('cartTotal').textContent = total.toFixed(2);
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCartDisplay();
+            showNotification('Item removed from cart');
+        }
+
+        function applyDiscount() {
+            discount = 0.1;
+            updateCartDisplay();
+            showNotification('10% discount applied');
+        }
+
+        function clearCart() {
+            cart = [];
+            discount = 0;
+            updateCartDisplay();
+            showNotification('Cart cleared');
+        }
+
+        // Initialize cart display
+        updateCartDisplay();
+    </script>
+</body>
+</html> 

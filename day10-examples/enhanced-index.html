@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 10 - Advanced JavaScript Concepts (Enhanced)</title>
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        /* Container for content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Section styling */
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Typography */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Example box styling */
+        .example {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Code block styling */
+        .code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        /* Button styling */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Output area styling */
+        .output {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        /* Status colors */
+        .error {
+            color: var(--error-color);
+        }
+
+        .success {
+            color: var(--secondary-color);
+        }
+
+        .warning {
+            color: var(--warning-color);
+        }
+
+        /* Tab navigation */
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 0 4px 4px 4px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advanced JavaScript Concepts (Enhanced)</h1>
+
+        <!-- Closures Section -->
+        <section class="section">
+            <h2>Closures</h2>
+            
+            <!-- Basic Closure Example -->
+            <div class="example">
+                <h3>Basic Closure</h3>
+                <div class="code">
+// Basic Closure
+// - Function that remembers its scope
+// - Can access variables from outer scope
+// - Maintains data privacy
+function createCounter() {
+    let count = 0;
+    return {
+        increment() { return ++count; },
+        decrement() { return --count; },
+        getCount() { return count; }
+    };
+}
+                </div>
+                <button onclick="runBasicClosure()">Run Example</button>
+                <div id="basicClosureOutput" class="output"></div>
+            </div>
+
+            <!-- Module Pattern Example -->
+            <div class="example">
+                <h3>Module Pattern</h3>
+                <div class="code">
+// Module Pattern
+// - Encapsulates private data
+// - Provides public interface
+// - Uses closure for privacy
+const bankAccount = (function() {
+    let balance = 0;
+    return {
+        deposit(amount) { balance += amount; return balance; },
+        withdraw(amount) { balance -= amount; return balance; },
+        getBalance() { return balance; }
+    };
+})();
+                </div>
+                <button onclick="runModulePattern()">Run Example</button>
+                <div id="modulePatternOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Prototypes Section -->
+        <section class="section">
+            <h2>Prototypes</h2>
+            
+            <!-- Prototype Chain Example -->
+            <div class="example">
+                <h3>Prototype Chain</h3>
+                <div class="code">
+// Prototype Chain
+// - Objects inherit from prototypes
+// - Properties are looked up in chain
+// - Can be modified at runtime
+function Animal(name) {
+    this.name = name;
+}
+Animal.prototype.speak = function() {
+    return `${this.name} makes a sound.`;
+};
+                </div>
+                <button onclick="runPrototypeChain()">Run Example</button>
+                <div id="prototypeChainOutput" class="output"></div>
+            </div>
+
+            <!-- Class Inheritance Example -->
+            <div class="example">
+                <h3>Class Inheritance</h3>
+                <div class="code">
+// Class Inheritance
+// - Extends base class
+// - Inherits methods
+// - Can override behavior
+class Dog extends Animal {
+    speak() {
+        return `${this.name} barks.`;
+    }
+}
+                </div>
+                <button onclick="runClassInheritance()">Run Example</button>
+                <div id="classInheritanceOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Design Patterns Section -->
+        <section class="section">
+            <h2>Design Patterns</h2>
+            
+            <!-- Singleton Pattern Example -->
+            <div class="example">
+                <h3>Singleton Pattern</h3>
+                <div class="code">
+// Singleton Pattern
+// - Single instance
+// - Global access
+// - Controlled instantiation
+class Database {
+    static instance;
+    constructor() {
+        if (Database.instance) {
+            return Database.instance;
+        }
+        Database.instance = this;
+    }
+}
+                </div>
+                <button onclick="runSingletonPattern()">Run Example</button>
+                <div id="singletonPatternOutput" class="output"></div>
+            </div>
+
+            <!-- Observer Pattern Example -->
+            <div class="example">
+                <h3>Observer Pattern</h3>
+                <div class="code">
+// Observer Pattern
+// - Subject maintains observers
+// - Notifies on changes
+// - Loose coupling
+class Subject {
+    constructor() {
+        this.observers = [];
+    }
+    subscribe(observer) {
+        this.observers.push(observer);
+    }
+    notify(data) {
+        this.observers.forEach(observer => observer.update(data));
+    }
+}
+                </div>
+                <button onclick="runObserverPattern()">Run Example</button>
+                <div id="observerPatternOutput" class="output"></div>
+            </div>
+
+            <!-- Factory Pattern Example -->
+            <div class="example">
+                <h3>Factory Pattern</h3>
+                <div class="code">
+// Factory Pattern
+// - Creates objects
+// - Hides creation logic
+// - Centralizes object creation
+class UserFactory {
+    createUser(type) {
+        switch(type) {
+            case 'admin':
+                return new AdminUser();
+            case 'regular':
+                return new RegularUser();
+        }
+    }
+}
+                </div>
+                <button onclick="runFactoryPattern()">Run Example</button>
+                <div id="factoryPatternOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Advanced Functions Section -->
+        <section class="section">
+            <h2>Advanced Functions</h2>
+            
+            <!-- Function Composition Example -->
+            <div class="example">
+                <h3>Function Composition</h3>
+                <div class="code">
+// Function Composition
+// - Combines functions
+// - Creates pipeline
+// - Right to left execution
+const compose = (...fns) => 
+    fns.reduce((f, g) => (...args) => f(g(...args)));
+                </div>
+                <button onclick="runFunctionComposition()">Run Example</button>
+                <div id="functionCompositionOutput" class="output"></div>
+            </div>
+
+            <!-- Currying Example -->
+            <div class="example">
+                <h3>Currying</h3>
+                <div class="code">
+// Currying
+// - Transforms function
+// - Partial application
+// - Creates specialized functions
+const curry = (fn) => {
+    return function curried(...args) {
+        if (args.length >= fn.length) {
+            return fn.apply(this, args);
+        }
+        return (...moreArgs) => curried.apply(this, args.concat(moreArgs));
+    };
+};
+                </div>
+                <button onclick="runCurrying()">Run Example</button>
+                <div id="curryingOutput" class="output"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Helper function to show tab content
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Helper function to display output
+        function displayOutput(elementId, output) {
+            const element = document.getElementById(elementId);
+            element.textContent = output;
+        }
+
+        // Basic Closure Example
+        function runBasicClosure() {
+            function createCounter() {
+                let count = 0;
+                return {
+                    increment() { return ++count; },
+                    decrement() { return --count; },
+                    getCount() { return count; }
+                };
+            }
+
+            const counter = createCounter();
+            const output = [
+                counter.increment(),
+                counter.increment(),
+                counter.decrement(),
+                counter.getCount()
+            ].join('\n');
+
+            displayOutput('basicClosureOutput', output);
+        }
+
+        // Module Pattern Example
+        function runModulePattern() {
+            const bankAccount = (function() {
+                let balance = 0;
+                return {
+                    deposit(amount) { balance += amount; return balance; },
+                    withdraw(amount) { balance -= amount; return balance; },
+                    getBalance() { return balance; }
+                };
+            })();
+
+            const output = [
+                bankAccount.deposit(100),
+                bankAccount.withdraw(50),
+                bankAccount.getBalance()
+            ].join('\n');
+
+            displayOutput('modulePatternOutput', output);
+        }
+
+        // Prototype Chain Example
+        function runPrototypeChain() {
+            function Animal(name) {
+                this.name = name;
+            }
+            Animal.prototype.speak = function() {
+                return `${this.name} makes a sound.`;
+            };
+
+            const animal = new Animal('Generic Animal');
+            displayOutput('prototypeChainOutput', animal.speak());
+        }
+
+        // Class Inheritance Example
+        function runClassInheritance() {
+            class Animal {
+                constructor(name) {
+                    this.name = name;
+                }
+                speak() {
+                    return `${this.name} makes a sound.`;
+                }
+            }
+
+            class Dog extends Animal {
+                speak() {
+                    return `${this.name} barks.`;
+                }
+            }
+
+            const dog = new Dog('Rex');
+            displayOutput('classInheritanceOutput', dog.speak());
+        }
+
+        // Singleton Pattern Example
+        function runSingletonPattern() {
+            class Database {
+                static instance;
+                constructor() {
+                    if (Database.instance) {
+                        return Database.instance;
+                    }
+                    Database.instance = this;
+                }
+            }
+
+            const db1 = new Database();
+            const db2 = new Database();
+            displayOutput('singletonPatternOutput', `Same instance: ${db1 === db2}`);
+        }
+
+        // Observer Pattern Example
+        function runObserverPattern() {
+            class Subject {
+                constructor() {
+                    this.observers = [];
+                }
+                subscribe(observer) {
+                    this.observers.push(observer);
+                }
+                notify(data) {
+                    this.observers.forEach(observer => observer.update(data));
+                }
+            }
+
+            class Observer {
+                update(data) {
+                    console.log('Received:', data);
+                }
+            }
+
+            const subject = new Subject();
+            const observer = new Observer();
+            subject.subscribe(observer);
+            subject.notify('Test data');
+
+            displayOutput('observerPatternOutput', 'Observer pattern implemented');
+        }
+
+        // Factory Pattern Example
+        function runFactoryPattern() {
+            class User {
+                constructor(name) {
+                    this.name = name;
+                }
+            }
+
+            class AdminUser extends User {
+                constructor(name) {
+                    super(name);
+                    this.role = 'admin';
+                }
+            }
+
+            class RegularUser extends User {
+                constructor(name) {
+                    super(name);
+                    this.role = 'user';
+                }
+            }
+
+            class UserFactory {
+                createUser(type, name) {
+                    switch(type) {
+                        case 'admin':
+                            return new AdminUser(name);
+                        case 'regular':
+                            return new RegularUser(name);
+                    }
+                }
+            }
+
+            const factory = new UserFactory();
+            const admin = factory.createUser('admin', 'John');
+            displayOutput('factoryPatternOutput', `Created ${admin.role} user: ${admin.name}`);
+        }
+
+        // Function Composition Example
+        function runFunctionComposition() {
+            const compose = (...fns) => 
+                fns.reduce((f, g) => (...args) => f(g(...args)));
+
+            const addOne = x => x + 1;
+            const double = x => x * 2;
+            const addOneAndDouble = compose(double, addOne);
+
+            displayOutput('functionCompositionOutput', `Result: ${addOneAndDouble(5)}`);
+        }
+
+        // Currying Example
+        function runCurrying() {
+            const curry = (fn) => {
+                return function curried(...args) {
+                    if (args.length >= fn.length) {
+                        return fn.apply(this, args);
+                    }
+                    return (...moreArgs) => curried.apply(this, args.concat(moreArgs));
+                };
+            };
+
+            const add = (a, b) => a + b;
+            const curriedAdd = curry(add);
+            const addFive = curriedAdd(5);
+
+            displayOutput('curryingOutput', `Result: ${addFive(3)}`);
+        }
+    </script>
+</body>
+</html> 

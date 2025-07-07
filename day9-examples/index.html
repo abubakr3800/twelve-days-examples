@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 9 - DOM Manipulation & Events</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .example {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .event-box {
+            width: 200px;
+            height: 200px;
+            background-color: var(--primary-color);
+            margin: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .event-box:hover {
+            transform: scale(1.1);
+        }
+
+        .draggable {
+            width: 100px;
+            height: 100px;
+            background-color: var(--secondary-color);
+            margin: 10px;
+            cursor: move;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .dropzone {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed var(--border-color);
+            margin: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+        }
+
+        .dropzone.dragover {
+            background-color: #e8f5e9;
+            border-color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            color: white;
+            display: none;
+        }
+
+        .notification.success {
+            background-color: var(--secondary-color);
+        }
+
+        .notification.error {
+            background-color: var(--error-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DOM Manipulation & Events</h1>
+
+        <!-- DOM Selection and Manipulation -->
+        <section class="section">
+            <h2>DOM Selection and Manipulation</h2>
+            <div class="example">
+                <h3>Basic DOM Operations</h3>
+                <div id="domExample">
+                    <p>This is a paragraph that will be modified.</p>
+                    <button onclick="changeText()">Change Text</button>
+                    <button onclick="addElement()">Add Element</button>
+                    <button onclick="removeElement()">Remove Element</button>
+                    </div>
+                <div class="code">
+// DOM Selection
+const element = document.getElementById('domExample');
+const paragraph = element.querySelector('p');
+
+// Text Manipulation
+function changeText() {
+    paragraph.textContent = 'Text has been changed!';
+}
+
+// Element Creation and Addition
+function addElement() {
+    const newElement = document.createElement('div');
+    newElement.textContent = 'New element added!';
+    element.appendChild(newElement);
+}
+
+// Element Removal
+function removeElement() {
+    const lastChild = element.lastElementChild;
+    if (lastChild) {
+        element.removeChild(lastChild);
+    }
+}
+                        </div>
+                    </div>
+                </section>
+
+        <!-- Event Handling -->
+        <section class="section">
+            <h2>Event Handling</h2>
+            <div class="example">
+                <h3>Event Listeners</h3>
+                <div class="event-box" id="eventBox">
+                    Click me!
+                    </div>
+                <div class="code">
+// Event Listeners
+const eventBox = document.getElementById('eventBox');
+
+// Click Event
+eventBox.addEventListener('click', (e) => {
+    console.log('Clicked!');
+    e.target.style.backgroundColor = getRandomColor();
+});
+
+// Mouse Events
+eventBox.addEventListener('mouseenter', (e) => {
+    e.target.textContent = 'Mouse Entered!';
+});
+
+eventBox.addEventListener('mouseleave', (e) => {
+    e.target.textContent = 'Mouse Left!';
+});
+
+// Keyboard Events
+document.addEventListener('keydown', (e) => {
+    console.log('Key pressed:', e.key);
+});
+
+// Form Events
+const form = document.querySelector('form');
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    console.log('Form submitted!');
+});
+                        </div>
+                    </div>
+        </section>
+
+        <!-- Event Delegation -->
+        <section class="section">
+            <h2>Event Delegation</h2>
+            <div class="example">
+                <h3>Dynamic List with Event Delegation</h3>
+                <ul id="dynamicList">
+                    <li>Item 1 <button class="delete-btn">Delete</button></li>
+                    <li>Item 2 <button class="delete-btn">Delete</button></li>
+                    <li>Item 3 <button class="delete-btn">Delete</button></li>
+                </ul>
+                <button onclick="addListItem()">Add Item</button>
+                <div class="code">
+// Event Delegation
+const list = document.getElementById('dynamicList');
+
+// Handle clicks on the entire list
+list.addEventListener('click', (e) => {
+    if (e.target.classList.contains('delete-btn')) {
+        e.target.parentElement.remove();
+    }
+});
+
+// Add new list items
+function addListItem() {
+    const li = document.createElement('li');
+    li.textContent = `Item ${list.children.length + 1} `;
+    const button = document.createElement('button');
+    button.textContent = 'Delete';
+    button.className = 'delete-btn';
+    li.appendChild(button);
+    list.appendChild(li);
+}
+                        </div>
+                    </div>
+                </section>
+
+        <!-- Drag and Drop -->
+        <section class="section">
+            <h2>Drag and Drop</h2>
+            <div class="example">
+                <h3>Drag and Drop Example</h3>
+                <div class="draggable" draggable="true" id="draggable">Drag me!</div>
+                <div class="dropzone" id="dropzone">Drop here!</div>
+                <div class="code">
+// Drag and Drop
+const draggable = document.getElementById('draggable');
+const dropzone = document.getElementById('dropzone');
+
+// Drag Events
+draggable.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', e.target.id);
+    e.target.style.opacity = '0.5';
+});
+
+draggable.addEventListener('dragend', (e) => {
+    e.target.style.opacity = '1';
+});
+
+// Drop Events
+dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+});
+
+dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('dragover');
+});
+
+dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    const id = e.dataTransfer.getData('text/plain');
+    const element = document.getElementById(id);
+    dropzone.appendChild(element);
+});
+                        </div>
+                    </div>
+                </section>
+
+        <!-- Form Handling -->
+        <section class="section">
+            <h2>Form Handling</h2>
+            <div class="example">
+                <h3>Form Validation and Submission</h3>
+                <form id="demoForm">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+                <div class="code">
+// Form Handling
+const form = document.getElementById('demoForm');
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Form Validation
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    
+    if (!name || !email) {
+        showNotification('Please fill in all fields', 'error');
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
+        showNotification('Please enter a valid email', 'error');
+        return;
+    }
+    
+    // Form Submission
+    showNotification('Form submitted successfully!', 'success');
+    form.reset();
+});
+
+// Helper Functions
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    notification.style.display = 'block';
+    setTimeout(() => {
+        notification.style.display = 'none';
+        notification.remove();
+    }, 3000);
+}
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Helper function for random colors
+        function getRandomColor() {
+            return '#' + Math.floor(Math.random()*16777215).toString(16);
+        }
+
+        // DOM Manipulation Examples
+        function changeText() {
+            const paragraph = document.querySelector('#domExample p');
+            paragraph.textContent = 'Text has been changed!';
+        }
+
+        function addElement() {
+            const container = document.getElementById('domExample');
+            const newElement = document.createElement('div');
+            newElement.textContent = 'New element added!';
+            container.appendChild(newElement);
+        }
+
+        function removeElement() {
+            const container = document.getElementById('domExample');
+            const lastChild = container.lastElementChild;
+            if (lastChild) {
+                container.removeChild(lastChild);
+            }
+        }
+
+        // Event Handling Examples
+        const eventBox = document.getElementById('eventBox');
+        eventBox.addEventListener('click', (e) => {
+            e.target.style.backgroundColor = getRandomColor();
+        });
+
+        eventBox.addEventListener('mouseenter', (e) => {
+            e.target.textContent = 'Mouse Entered!';
+        });
+
+        eventBox.addEventListener('mouseleave', (e) => {
+            e.target.textContent = 'Mouse Left!';
+        });
+
+        // Event Delegation Example
+        const list = document.getElementById('dynamicList');
+        list.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-btn')) {
+                e.target.parentElement.remove();
+            }
+        });
+
+        function addListItem() {
+            const list = document.getElementById('dynamicList');
+            const li = document.createElement('li');
+            li.textContent = `Item ${list.children.length + 1} `;
+            const button = document.createElement('button');
+            button.textContent = 'Delete';
+            button.className = 'delete-btn';
+            li.appendChild(button);
+            list.appendChild(li);
+        }
+
+        // Drag and Drop Example
+        const draggable = document.getElementById('draggable');
+        const dropzone = document.getElementById('dropzone');
+
+        draggable.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', e.target.id);
+            e.target.style.opacity = '0.5';
+        });
+
+        draggable.addEventListener('dragend', (e) => {
+            e.target.style.opacity = '1';
+        });
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            const id = e.dataTransfer.getData('text/plain');
+            const element = document.getElementById(id);
+            dropzone.appendChild(element);
+        });
+
+        // Form Handling Example
+        const form = document.getElementById('demoForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            
+            if (!name || !email) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showNotification('Please enter a valid email', 'error');
+                return;
+            }
+            
+            showNotification('Form submitted successfully!', 'success');
+            form.reset();
+        });
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+                notification.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 9 - DOM Manipulation & Events (Enhanced)</title>
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        /* Container for content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Section styling */
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Typography */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Example box styling */
+        .example {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Code block styling */
+        .code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        /* Button styling */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Output area styling */
+        .output {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        /* Status colors */
+        .error {
+            color: var(--error-color);
+        }
+
+        .success {
+            color: var(--secondary-color);
+        }
+
+        .warning {
+            color: var(--warning-color);
+        }
+
+        /* Tab navigation */
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 0 4px 4px 4px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DOM Manipulation & Events (Enhanced)</h1>
+
+        <!-- DOM Selection Section -->
+        <section class="section">
+            <h2>DOM Selection</h2>
+            
+            <!-- Query Selector Example -->
+            <div class="example">
+                <h3>Query Selector</h3>
+                <div class="code">
+// Query Selector
+// - Selects first matching element
+// - Uses CSS selector syntax
+// - Returns null if not found
+const element = document.querySelector('.class-name');
+                </div>
+                <button onclick="runQuerySelector()">Run Example</button>
+                <div id="querySelectorOutput" class="output"></div>
+            </div>
+
+            <!-- Query Selector All Example -->
+            <div class="example">
+                <h3>Query Selector All</h3>
+                <div class="code">
+// Query Selector All
+// - Selects all matching elements
+// - Returns NodeList
+// - Can be converted to array
+const elements = document.querySelectorAll('.class-name');
+                </div>
+                <button onclick="runQuerySelectorAll()">Run Example</button>
+                <div id="querySelectorAllOutput" class="output"></div>
+            </div>
+
+            <!-- Get Element By ID Example -->
+            <div class="example">
+                <h3>Get Element By ID</h3>
+                <div class="code">
+// Get Element By ID
+// - Selects element by ID
+// - Returns null if not found
+// - Fastest selection method
+const element = document.getElementById('element-id');
+                </div>
+                <button onclick="runGetElementById()">Run Example</button>
+                <div id="getElementByIdOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- DOM Manipulation Section -->
+        <section class="section">
+            <h2>DOM Manipulation</h2>
+            
+            <!-- Create Element Example -->
+            <div class="example">
+                <h3>Create Element</h3>
+                <div class="code">
+// Create Element
+// - Creates new element
+// - Sets properties
+// - Appends to DOM
+const element = document.createElement('div');
+element.textContent = 'New Element';
+document.body.appendChild(element);
+                </div>
+                <button onclick="runCreateElement()">Run Example</button>
+                <div id="createElementOutput" class="output"></div>
+            </div>
+
+            <!-- Update Element Example -->
+            <div class="example">
+                <h3>Update Element</h3>
+                <div class="code">
+// Update Element
+// - Modifies element properties
+// - Changes content
+// - Updates attributes
+const element = document.querySelector('.update-me');
+element.textContent = 'Updated Content';
+element.setAttribute('class', 'updated');
+                </div>
+                <button onclick="runUpdateElement()">Run Example</button>
+                <div id="updateElementOutput" class="output"></div>
+            </div>
+
+            <!-- Remove Element Example -->
+            <div class="example">
+                <h3>Remove Element</h3>
+                <div class="code">
+// Remove Element
+// - Removes element from DOM
+// - Cleans up references
+// - Updates parent
+const element = document.querySelector('.remove-me');
+element.parentNode.removeChild(element);
+                </div>
+                <button onclick="runRemoveElement()">Run Example</button>
+                <div id="removeElementOutput" class="output"></div>
+            </div>
+        </section>
+
+        <!-- Event Handling Section -->
+        <section class="section">
+            <h2>Event Handling</h2>
+            
+            <!-- Click Event Example -->
+            <div class="example">
+                <h3>Click Event</h3>
+                <div class="code">
+// Click Event
+// - Handles mouse clicks
+// - Bubbles up DOM
+// - Can be prevented
+element.addEventListener('click', (event) => {
+    console.log('Clicked!');
+});
+                </div>
+                <button onclick="runClickEvent()">Run Example</button>
+                <div id="clickEventOutput" class="output"></div>
+            </div>
+
+            <!-- Form Submit Example -->
+            <div class="example">
+                <h3>Form Submit</h3>
+                <div class="code">
+// Form Submit
+// - Handles form submission
+// - Prevents default
+// - Validates data
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    // Handle form data
+});
+                </div>
+                <button onclick="runFormSubmit()">Run Example</button>
+                <div id="formSubmitOutput" class="output"></div>
+            </div>
+
+            <!-- Keyboard Event Example -->
+            <div class="example">
+                <h3>Keyboard Event</h3>
+                <div class="code">
+// Keyboard Event
+// - Handles key presses
+// - Supports modifiers
+// - Useful for shortcuts
+document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        // Handle save
+    }
+});
+                </div>
+                <button onclick="runKeyboardEvent()">Run Example</button>
+                <div id="keyboardEventOutput" class="output"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Helper function to show tab content
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
+        // Helper function to display output
+        function displayOutput(elementId, output) {
+            const element = document.getElementById(elementId);
+            element.textContent = output;
+        }
+
+        // Query Selector Example
+        function runQuerySelector() {
+            const element = document.querySelector('.example');
+            displayOutput('querySelectorOutput', element ? 'Element found' : 'Element not found');
+        }
+
+        // Query Selector All Example
+        function runQuerySelectorAll() {
+            const elements = document.querySelectorAll('.example');
+            displayOutput('querySelectorAllOutput', `Found ${elements.length} elements`);
+        }
+
+        // Get Element By ID Example
+        function runGetElementById() {
+            const element = document.getElementById('querySelectorOutput');
+            displayOutput('getElementByIdOutput', element ? 'Element found' : 'Element not found');
+        }
+
+        // Create Element Example
+        function runCreateElement() {
+            const element = document.createElement('div');
+            element.textContent = 'New Element';
+            element.className = 'created-element';
+            document.body.appendChild(element);
+            displayOutput('createElementOutput', 'Element created and appended');
+        }
+
+        // Update Element Example
+        function runUpdateElement() {
+            const element = document.querySelector('.created-element');
+            if (element) {
+                element.textContent = 'Updated Content';
+                element.className = 'updated-element';
+                displayOutput('updateElementOutput', 'Element updated');
+            } else {
+                displayOutput('updateElementOutput', 'Element not found');
+            }
+        }
+
+        // Remove Element Example
+        function runRemoveElement() {
+            const element = document.querySelector('.updated-element');
+            if (element) {
+                element.parentNode.removeChild(element);
+                displayOutput('removeElementOutput', 'Element removed');
+            } else {
+                displayOutput('removeElementOutput', 'Element not found');
+            }
+        }
+
+        // Click Event Example
+        function runClickEvent() {
+            const button = document.createElement('button');
+            button.textContent = 'Click Me';
+            button.addEventListener('click', () => {
+                displayOutput('clickEventOutput', 'Button clicked!');
+            });
+            document.body.appendChild(button);
+        }
+
+        // Form Submit Example
+        function runFormSubmit() {
+            const form = document.createElement('form');
+            form.innerHTML = `
+                <input type="text" name="username" placeholder="Username">
+                <button type="submit">Submit</button>
+            `;
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const username = form.querySelector('[name="username"]').value;
+                displayOutput('formSubmitOutput', `Form submitted with username: ${username}`);
+            });
+            document.body.appendChild(form);
+        }
+
+        // Keyboard Event Example
+        function runKeyboardEvent() {
+            document.addEventListener('keydown', (event) => {
+                if (event.ctrlKey && event.key === 's') {
+                    event.preventDefault();
+                    displayOutput('keyboardEventOutput', 'Save shortcut triggered!');
+                }
+            });
+            displayOutput('keyboardEventOutput', 'Press Ctrl+S to trigger save');
+        }
+    </script>
+</body>
+</html> 

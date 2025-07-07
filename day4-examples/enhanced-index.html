@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 4 - Enhanced Arrays, Loops & Data Persistence</title>
+    <style>
+        /* ======================
+           GENERAL STYLES 
+           ====================== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        body.dark-mode h1 {
+            color: #3498db;
+        }
+        
+        section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode section {
+            background-color: #2d2d2d;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        h2 {
+            color: #2980b9;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        body.dark-mode h2 {
+            color: #5dade2;
+            border-bottom-color: #404040;
+        }
+        
+        h3 {
+            color: #16a085;
+            margin: 20px 0 15px;
+        }
+
+        body.dark-mode h3 {
+            color: #1abc9c;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        body.dark-mode button {
+            background-color: #2980b9;
+        }
+
+        body.dark-mode button:hover {
+            background-color: #3498db;
+        }
+        
+        input, select {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        body.dark-mode input,
+        body.dark-mode select {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            border-color: #404040;
+        }
+        
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 25px;
+        }
+        
+        .task-item {
+            background-color: #f1f8fe;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .task-item {
+            background-color: #2d2d2d;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .task-item:hover {
+            background-color: #e1f0fa;
+            transform: translateX(5px);
+        }
+
+        body.dark-mode .task-item:hover {
+            background-color: #3d3d3d;
+        }
+        
+        .task-item.completed {
+            background-color: #e8f8f5;
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+
+        body.dark-mode .task-item.completed {
+            background-color: #2d3d3d;
+        }
+        
+        .priority-high {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .priority-medium {
+            border-left: 4px solid #f39c12;
+        }
+        
+        .priority-low {
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .task-actions button {
+            margin-left: 10px;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            margin-left: 15px;
+        }
+
+        body.dark-mode .category-tag {
+            background-color: #2980b9;
+        }
+        
+        .debug-section {
+            background-color: #fff3e0;
+            border-left: 4px solid #e67e22;
+        }
+
+        body.dark-mode .debug-section {
+            background-color: #332b1a;
+            border-left-color: #d35400;
+        }
+        
+        .storage-status {
+            font-size: 14px;
+            color: #27ae60;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        body.dark-mode .storage-status {
+            color: #2ecc71;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .controls > * {
+            flex: 1 1 200px;
+        }
+
+        .output-area {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            min-height: 100px;
+            border: 1px solid #ddd;
+        }
+
+        body.dark-mode .output-area {
+            background-color: #2d2d2d;
+            border-color: #404040;
+        }
+
+        .code-example {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: auto;
+        }
+
+        .code-comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            font-size: 20px;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+
+            .controls > * {
+                width: 100%;
+            }
+
+            .task-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .task-actions {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Day 4: Enhanced Arrays, Loops & Data Persistence</h1>
+    
+    <!-- ===========================================
+         ARRAY METHODS
+         =========================================== -->
+    <section id="array-section">
+        <h2>1. Array Methods</h2>
+        
+        <div class="controls">
+            <button onclick="showBasicArrayMethods()">Basic Methods</button>
+            <button onclick="showAdvancedArrayMethods()">Advanced Methods</button>
+            <button onclick="showArrayChaining()">Method Chaining</button>
+        </div>
+        
+        <div class="code-example">
+            // Example Array
+            const numbers = [1, 2, 3, 4, 5];
+            const users = [
+                { name: "Alice", age: 25 },
+                { name: "Bob", age: 30 },
+                { name: "Charlie", age: 22 }
+            ];
+        </div>
+        
+        <div id="array-output" class="output-area"></div>
+    </section>
+
+    <!-- ===========================================
+         LOOPS
+         =========================================== -->
+    <section id="loops-section">
+        <h2>2. Loops</h2>
+        
+        <div class="controls">
+            <button onclick="showForLoop()">For Loop</button>
+            <button onclick="showForOfLoop()">For...Of Loop</button>
+            <button onclick="showForInLoop()">For...In Loop</button>
+            <button onclick="showWhileLoop()">While Loop</button>
+        </div>
+        
+        <div class="code-example">
+            // Loop Examples
+            for (let i = 0; i < array.length; i++) { ... }
+            for (const item of array) { ... }
+            for (const key in object) { ... }
+            while (condition) { ... }
+        </div>
+        
+        <div id="loops-output" class="output-area"></div>
+    </section>
+
+    <!-- ===========================================
+         TASK MANAGER WITH LOCALSTORAGE
+         =========================================== -->
+    <section id="task-manager-section">
+        <h2>3. Task Manager with localStorage</h2>
+        
+        <div class="controls">
+            <input type="text" id="new-task" placeholder="Task description">
+            <select id="task-priority">
+                <option value="high">High Priority</option>
+                <option value="medium" selected>Medium Priority</option>
+                <option value="low">Low Priority</option>
+            </select>
+            <select id="task-category">
+                <option value="work">Work</option>
+                <option value="personal">Personal</option>
+                <option value="shopping">Shopping</option>
+                <option value="health">Health</option>
+                <option value="education">Education</option>
+            </select>
+            <button onclick="addNewTask()">Add Task</button>
+        </div>
+        
+        <div class="controls">
+            <input type="text" id="search-task" placeholder="Search tasks..." oninput="filterTasks()">
+            <button onclick="clearCompleted()">Clear Completed</button>
+            <button onclick="sortTasks()">Sort Tasks</button>
+        </div>
+        
+        <div class="storage-status" id="storage-status">Loading tasks...</div>
+        
+        <ul class="task-list" id="task-list"></ul>
+    </section>
+
+    <!-- ===========================================
+         DEBUGGING EXERCISES
+         =========================================== -->
+    <section class="debug-section" id="debug-section">
+        <h2>4. Debugging Exercises</h2>
+        
+        <h3>Exercise 1: Fix the LocalStorage Reader</h3>
+        <div class="code-example">
+            // Debug this code
+            function readStorage() {
+                const data = localStorage.getItem('tasks');
+                return data;
+            }
+        </div>
+        <button onclick="debugLocalStorage()">Run Storage Reader</button>
+        <div id="debug-output-1" class="output-area"></div>
+        
+        <h3>Exercise 2: Fix the Loop</h3>
+        <div class="code-example">
+            // Debug this code
+            function processArray(arr) {
+                for (let i = 0; i <= arr.length; i++) {
+                    console.log(arr[i]);
+                }
+            }
+        </div>
+        <button onclick="debugLoop()">Run Loop</button>
+        <div id="debug-output-2" class="output-area"></div>
+        
+        <h3>Exercise 3: Fix the Task Filter</h3>
+        <div class="code-example">
+            // Debug this code
+            function filterTasks(tasks, searchTerm) {
+                return tasks.filter(task => task.text.includes(searchTerm));
+            }
+        </div>
+        <button onclick="debugFilter()">Run Filter</button>
+        <div id="debug-output-3" class="output-area"></div>
+    </section>
+
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙</button>
+
+    <script>
+        // ===========================================
+        // 1. ARRAY METHODS
+        // ===========================================
+        const sampleArray = [10, 20, 30, 40, 50];
+        const userArray = [
+            { name: "Alice", age: 25 },
+            { name: "Bob", age: 30 },
+            { name: "Charlie", age: 22 }
+        ];
+        
+        function showBasicArrayMethods() {
+            let output = "<h3>Basic Array Methods</h3>";
+            
+            // Push/pop
+            const pushArray = [...sampleArray];
+            pushArray.push(60);
+            output += `<p>Push: [${pushArray}]</p>`;
+            
+            const popArray = [...sampleArray];
+            popArray.pop();
+            output += `<p>Pop: [${popArray}]</p>`;
+            
+            // Shift/unshift
+            const shiftArray = [...sampleArray];
+            shiftArray.shift();
+            output += `<p>Shift: [${shiftArray}]</p>`;
+            
+            const unshiftArray = [...sampleArray];
+            unshiftArray.unshift(0);
+            output += `<p>Unshift: [${unshiftArray}]</p>`;
+            
+            // Slice
+            const sliceArray = sampleArray.slice(1, 4);
+            output += `<p>Slice(1,4): [${sliceArray}]</p>`;
+            
+            // Splice
+            const spliceArray = [...sampleArray];
+            spliceArray.splice(2, 1, 35);
+            output += `<p>Splice(2,1,35): [${spliceArray}]</p>`;
+            
+            document.getElementById("array-output").innerHTML = output;
+        }
+        
+        function showAdvancedArrayMethods() {
+            let output = "<h3>Advanced Array Methods</h3>";
+            
+            // Map
+            const doubled = sampleArray.map(num => num * 2);
+            output += `<p>Map (double): [${doubled}]</p>`;
+            
+            // Filter
+            const evenNumbers = sampleArray.filter(num => num % 2 === 0);
+            output += `<p>Filter (even): [${evenNumbers}]</p>`;
+            
+            // Reduce
+            const sum = sampleArray.reduce((acc, curr) => acc + curr, 0);
+            output += `<p>Reduce (sum): ${sum}</p>`;
+            
+            // Find
+            const firstEven = sampleArray.find(num => num % 2 === 0);
+            output += `<p>Find (first even): ${firstEven}</p>`;
+            
+            // Some
+            const hasEven = sampleArray.some(num => num % 2 === 0);
+            output += `<p>Some (has even): ${hasEven}</p>`;
+            
+            // Every
+            const allPositive = sampleArray.every(num => num > 0);
+            output += `<p>Every (all positive): ${allPositive}</p>`;
+            
+            document.getElementById("array-output").innerHTML = output;
+        }
+
+        function showArrayChaining() {
+            let output = "<h3>Array Method Chaining</h3>";
+            
+            // Chain map and filter
+            const result1 = sampleArray
+                .filter(num => num > 20)
+                .map(num => num * 2);
+            output += `<p>Filter > 20 then double: [${result1}]</p>`;
+            
+            // Chain map, filter, and reduce
+            const result2 = sampleArray
+                .filter(num => num % 2 === 0)
+                .map(num => num * 2)
+                .reduce((acc, curr) => acc + curr, 0);
+            output += `<p>Even numbers doubled and summed: ${result2}</p>`;
+            
+            // Complex chain with objects
+            const result3 = userArray
+                .filter(user => user.age > 25)
+                .map(user => user.name.toUpperCase())
+                .join(', ');
+            output += `<p>Users over 25 (uppercase names): ${result3}</p>`;
+            
+            document.getElementById("array-output").innerHTML = output;
+        }
+
+        // ===========================================
+        // 2. LOOPS
+        // ===========================================
+        function showForLoop() {
+            let output = "<h3>For Loop</h3>";
+            let sum = 0;
+            
+            for (let i = 0; i < sampleArray.length; i++) {
+                sum += sampleArray[i];
+                output += `<p>Iteration ${i + 1}: Current sum = ${sum}</p>`;
+            }
+            
+            output += `<p>Final sum: ${sum}</p>`;
+            document.getElementById("loops-output").innerHTML = output;
+        }
+        
+        function showForOfLoop() {
+            let output = "<h3>For...Of Loop</h3>";
+            
+            for (const num of sampleArray) {
+                output += `<p>Current number: ${num}</p>`;
+            }
+            
+            document.getElementById("loops-output").innerHTML = output;
+        }
+        
+        function showForInLoop() {
+            let output = "<h3>For...In Loop</h3>";
+            
+            for (const index in sampleArray) {
+                output += `<p>Index ${index}: ${sampleArray[index]}</p>`;
+            }
+            
+            document.getElementById("loops-output").innerHTML = output;
+        }
+
+        function showWhileLoop() {
+            let output = "<h3>While Loop</h3>";
+            let i = 0;
+            let sum = 0;
+            
+            while (i < sampleArray.length) {
+                sum += sampleArray[i];
+                output += `<p>Iteration ${i + 1}: Current sum = ${sum}</p>`;
+                i++;
+            }
+            
+            output += `<p>Final sum: ${sum}</p>`;
+            document.getElementById("loops-output").innerHTML = output;
+        }
+
+        // ===========================================
+        // 3. TASK MANAGER
+        // ===========================================
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+        function addNewTask() {
+            const input = document.getElementById('new-task');
+            const priority = document.getElementById('task-priority').value;
+            const category = document.getElementById('task-category').value;
+            
+            if (input.value.trim()) {
+                const task = {
+                    id: Date.now(),
+                    text: input.value.trim(),
+                    completed: false,
+                    priority: priority,
+                    category: category,
+                    createdAt: new Date().toISOString()
+                };
+                
+                tasks.push(task);
+                saveTasks();
+                updateTaskList();
+                input.value = '';
+            }
+        }
+
+        function updateTaskList() {
+            const list = document.getElementById('task-list');
+            list.innerHTML = '';
+            
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task-item ${task.completed ? 'completed' : ''} priority-${task.priority}`;
+                
+                li.innerHTML = `
+                    <span>${task.text}</span>
+                    <span class="category-tag">${task.category}</span>
+                    <div class="task-actions">
+                        <button onclick="toggleTask(${task.id})">${task.completed ? 'Undo' : 'Complete'}</button>
+                        <button onclick="deleteTask(${task.id})">Delete</button>
+                    </div>
+                `;
+                
+                list.appendChild(li);
+            });
+            
+            updateStorageStatus();
+        }
+
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                saveTasks();
+                updateTaskList();
+            }
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+            updateTaskList();
+        }
+
+        function clearCompleted() {
+            tasks = tasks.filter(t => !t.completed);
+            saveTasks();
+            updateTaskList();
+        }
+
+        function filterTasks() {
+            const searchTerm = document.getElementById('search-task').value.toLowerCase();
+            const filteredTasks = tasks.filter(task => 
+                task.text.toLowerCase().includes(searchTerm)
+            );
+            
+            const list = document.getElementById('task-list');
+            list.innerHTML = '';
+            
+            filteredTasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task-item ${task.completed ? 'completed' : ''} priority-${task.priority}`;
+                
+                li.innerHTML = `
+                    <span>${task.text}</span>
+                    <span class="category-tag">${task.category}</span>
+                    <div class="task-actions">
+                        <button onclick="toggleTask(${task.id})">${task.completed ? 'Undo' : 'Complete'}</button>
+                        <button onclick="deleteTask(${task.id})">Delete</button>
+                    </div>
+                `;
+                
+                list.appendChild(li);
+            });
+        }
+
+        function sortTasks() {
+            tasks.sort((a, b) => {
+                // First by completion status
+                if (a.completed !== b.completed) {
+                    return a.completed ? 1 : -1;
+                }
+                // Then by priority
+                const priorityOrder = { high: 0, medium: 1, low: 2 };
+                if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+                    return priorityOrder[a.priority] - priorityOrder[b.priority];
+                }
+                // Finally by creation date
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+            
+            saveTasks();
+            updateTaskList();
+        }
+
+        function saveTasks() {
+            try {
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                updateStorageStatus();
+            } catch (error) {
+                console.error('Error saving tasks:', error);
+                alert('Error saving tasks. Please try again.');
+            }
+        }
+
+        function updateStorageStatus() {
+            const status = document.getElementById('storage-status');
+            status.textContent = `Tasks saved: ${tasks.length}`;
+        }
+
+        // ===========================================
+        // 4. DEBUGGING EXERCISES
+        // ===========================================
+        function debugLocalStorage() {
+            const output = document.getElementById('debug-output-1');
+            try {
+                const data = localStorage.getItem('tasks');
+                if (!data) {
+                    output.innerHTML = '<p class="error">No data found in localStorage</p>';
+                    return;
+                }
+                
+                const tasks = JSON.parse(data);
+                output.innerHTML = `<p>Successfully read ${tasks.length} tasks from localStorage</p>`;
+            } catch (error) {
+                output.innerHTML = `<p class="error">Error reading from localStorage: ${error.message}</p>`;
+            }
+        }
+
+        function debugLoop() {
+            const output = document.getElementById('debug-output-2');
+            const arr = [1, 2, 3, 4, 5];
+            let result = '';
+            
+            try {
+                for (let i = 0; i < arr.length; i++) {
+                    result += `${arr[i]} `;
+                }
+                output.innerHTML = `<p>Loop result: ${result}</p>`;
+            } catch (error) {
+                output.innerHTML = `<p class="error">Error in loop: ${error.message}</p>`;
+            }
+        }
+
+        function debugFilter() {
+            const output = document.getElementById('debug-output-3');
+            const tasks = [
+                { text: "Buy groceries" },
+                { text: "Call mom" },
+                { text: "Finish project" }
+            ];
+            const searchTerm = "groceries";
+            
+            try {
+                const filtered = tasks.filter(task => 
+                    task.text.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                output.innerHTML = `<p>Found ${filtered.length} matching tasks</p>`;
+            } catch (error) {
+                output.innerHTML = `<p class="error">Error in filter: ${error.message}</p>`;
+            }
+        }
+
+        // ===========================================
+        // DARK MODE
+        // ===========================================
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            const button = document.querySelector('.dark-mode-toggle');
+            button.textContent = isDarkMode ? '☀️' : '🌙';
+        }
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.dark-mode-toggle').textContent = '☀️';
+        }
+
+        // Initialize
+        updateTaskList();
+    </script>
+</body>
+</html> 

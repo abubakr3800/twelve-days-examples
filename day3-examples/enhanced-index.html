@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 3 - Enhanced JavaScript Fundamentals</title>
+    <style>
+        /* ======================
+           GENERAL STYLES 
+           ====================== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        section {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 35px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode section {
+            background-color: #2d2d2d;
+            border-color: #404040;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        body.dark-mode h1 {
+            color: #3498db;
+        }
+        
+        h2 {
+            color: #2980b9;
+            margin-top: 0;
+            font-size: 1.8em;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        body.dark-mode h2 {
+            color: #5dade2;
+        }
+
+        h3 {
+            color: #34495e;
+            margin: 20px 0 15px;
+        }
+
+        body.dark-mode h3 {
+            color: #7f8c8d;
+        }
+        
+        .code-example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            border-left: 4px solid #3498db;
+        }
+        
+        body.dark-mode .code-example {
+            background: #2d2d2d;
+            border-left-color: #5dade2;
+        }
+        
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .task-list li {
+            background: #ecf0f1;
+            margin: 8px 0;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode .task-list li {
+            background: #404040;
+        }
+        
+        .task-list li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            color: #7f8c8d;
+            opacity: 0.7;
+        }
+        
+        button, input[type="submit"] {
+            cursor: pointer;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        button:hover, input[type="submit"]:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        input[type="text"], 
+        input[type="number"],
+        input[type="email"] {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            width: 250px;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        body.dark-mode input {
+            background-color: #404040;
+            color: #e0e0e0;
+            border-color: #505050;
+        }
+        
+        .debug-section {
+            background-color: #fff3e0;
+            border-left: 4px solid #e67e22;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        body.dark-mode .debug-section {
+            background-color: #332b1a;
+        }
+        
+        .user-profile {
+            background: #e8f4fc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode .user-profile {
+            background: #1a344d;
+        }
+        
+        .array-methods {
+            background: #e8f8f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode .array-methods {
+            background: #0d3b33;
+        }
+        
+        .storage-status {
+            font-size: 0.9em;
+            color: #27ae60;
+            margin-top: 8px;
+            display: block;
+        }
+        
+        body.dark-mode .storage-status {
+            color: #2ecc71;
+        }
+
+        .output-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 50px;
+            border: 1px solid #ddd;
+        }
+
+        body.dark-mode .output-box {
+            background: #2d2d2d;
+            border-color: #404040;
+        }
+
+        .interactive-demo {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #b3d7ff;
+        }
+
+        body.dark-mode .interactive-demo {
+            background: #1a2a3a;
+            border-color: #2c4a6a;
+        }
+
+        #mouse-box {
+            width: 150px;
+            height: 150px;
+            background: #3498db;
+            transition: all 0.3s;
+            margin: 15px 0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #mouse-box:hover {
+            transform: scale(1.05);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        body.dark-mode .error-message {
+            color: #ff6b6b;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        body.dark-mode .success-message {
+            color: #2ecc71;
+        }
+
+        .code-comment {
+            color: #7f8c8d;
+            font-style: italic;
+            margin: 5px 0;
+        }
+
+        body.dark-mode .code-comment {
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Day 3: Enhanced JavaScript Fundamentals</h1>
+    
+    <!-- ===========================================
+         VARIABLES & DATA TYPES
+         =========================================== -->
+    <section id="variables-section">
+        <h2>1. Variables & Data Types</h2>
+        <p>Open the console to see examples (Ctrl+Shift+J):</p>
+        <button onclick="showVariables()">Show Variables in Console</button>
+        
+        <div class="interactive-demo">
+            <h3>Template Literals Demo</h3>
+            <div class="code-example">
+                // Template Literal Example
+                const name = "John";
+                const age = 25;
+                const greeting = `Hello, my name is ${name} and I am ${age} years old.`;
+            </div>
+            <button onclick="showTemplateLiteral()">Show User Profile</button>
+            <div id="template-output" class="output-box"></div>
+        </div>
+
+        <div class="interactive-demo">
+            <h3>Type Conversion Demo</h3>
+            <input type="text" id="type-input" placeholder="Enter a value">
+            <button onclick="showTypeConversion()">Show Type Conversion</button>
+            <div id="type-output" class="output-box"></div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         FUNCTIONS & CONDITIONALS
+         =========================================== -->
+    <section id="functions-section">
+        <h2>2. Functions & Conditionals</h2>
+        
+        <div class="interactive-demo">
+            <h3>Age Checker</h3>
+            <div class="code-example">
+                // Conditional Statement Example
+                if (age >= 18) {
+                    return "You are an adult";
+                } else {
+                    return "You are a minor";
+                }
+            </div>
+            <label for="age-input">Enter your age:</label>
+            <input type="number" id="age-input">
+            <button onclick="checkAge()">Check Age</button>
+            <p id="age-result" class="output-box"></p>
+        </div>
+        
+        <div class="interactive-demo">
+            <h3>Arrow Function Demo</h3>
+            <div class="code-example">
+                // Arrow Function Example
+                const multiply = (a, b) => a * b;
+            </div>
+            <input type="number" id="num1" placeholder="First number">
+            <input type="number" id="num2" placeholder="Second number">
+            <button onclick="showArrowFunction()">Multiply Numbers</button>
+            <p id="arrow-output" class="output-box"></p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         ARRAY METHODS
+         =========================================== -->
+    <section id="array-section">
+        <h2>3. Array Methods</h2>
+        
+        <div class="interactive-demo">
+            <h3>.map() Example</h3>
+            <div class="code-example">
+                // Map Example
+                const numbers = [1, 2, 3, 4, 5];
+                const doubled = numbers.map(num => num * 2);
+            </div>
+            <input type="text" id="map-input" placeholder="Enter numbers (comma-separated)">
+            <button onclick="showMapExample()">Double Numbers</button>
+            <div id="map-output" class="output-box"></div>
+        </div>
+        
+        <div class="interactive-demo">
+            <h3>.filter() Example</h3>
+            <div class="code-example">
+                // Filter Example
+                const numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+                const evenNumbers = numbers.filter(num => num % 2 === 0);
+            </div>
+            <input type="text" id="filter-input" placeholder="Enter numbers (comma-separated)">
+            <button onclick="showFilterExample()">Filter Even Numbers</button>
+            <div id="filter-output" class="output-box"></div>
+        </div>
+        
+        <div class="interactive-demo">
+            <h3>.reduce() Example</h3>
+            <div class="code-example">
+                // Reduce Example
+                const numbers = [10, 20, 30, 40];
+                const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+            </div>
+            <input type="text" id="reduce-input" placeholder="Enter numbers (comma-separated)">
+            <button onclick="showReduceExample()">Calculate Sum</button>
+            <div id="reduce-output" class="output-box"></div>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         DOM MANIPULATION
+         =========================================== -->
+    <section id="dom-section">
+        <h2>4. DOM Manipulation</h2>
+        
+        <div class="interactive-demo">
+            <h3>Task Manager (with localStorage)</h3>
+            <div class="code-example">
+                // LocalStorage Example
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                const savedTasks = JSON.parse(localStorage.getItem('tasks'));
+            </div>
+            <input type="text" id="task-input" placeholder="New task">
+            <button onclick="addTask()">Add Task</button>
+            <span class="storage-status" id="storage-status"></span>
+            <ul class="task-list" id="task-list"></ul>
+        </div>
+        
+        <div class="interactive-demo">
+            <h3>Event Handling Demo</h3>
+            <div id="mouse-box" onmousemove="updateMousePosition(event)">
+                Move mouse over me
+            </div>
+            <div id="mouse-position" class="output-box"></div>
+        </div>
+
+        <div class="interactive-demo">
+            <h3>Dark Mode Toggle</h3>
+            <div class="code-example">
+                // Dark Mode Toggle
+                document.body.classList.toggle('dark-mode');
+            </div>
+            <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         ERROR HANDLING
+         =========================================== -->
+    <section id="error-section">
+        <h2>5. Error Handling</h2>
+        
+        <div class="interactive-demo">
+            <h3>Try-Catch Demo</h3>
+            <div class="code-example">
+                // Try-Catch Example
+                try {
+                    // Code that might throw an error
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            </div>
+            <input type="text" id="error-input" placeholder="Enter a number">
+            <button onclick="demonstrateErrorHandling()">Test Error Handling</button>
+            <div id="error-output" class="output-box"></div>
+        </div>
+    </section>
+
+    <script>
+        // ===========================================
+        // VARIABLES & DATA TYPES
+        // ===========================================
+        function showVariables() {
+            // Number
+            const age = 25;
+            // String
+            const name = "John";
+            // Boolean
+            const isStudent = true;
+            // Array
+            const hobbies = ["reading", "gaming", "coding"];
+            // Object
+            const person = {
+                name: "John",
+                age: 25,
+                isStudent: true
+            };
+            
+            console.log("=== Variables Demo ===");
+            console.log("Number:", age);
+            console.log("String:", name);
+            console.log("Boolean:", isStudent);
+            console.log("Array:", hobbies);
+            console.log("Object:", person);
+        }
+
+        function showTemplateLiteral() {
+            const name = "John";
+            const age = 25;
+            const greeting = `Hello, my name is ${name} and I am ${age} years old.`;
+            document.getElementById("template-output").textContent = greeting;
+        }
+
+        function showTypeConversion() {
+            const input = document.getElementById("type-input").value;
+            const output = document.getElementById("type-output");
+            
+            output.innerHTML = `
+                Original value: ${input}<br>
+                Type: ${typeof input}<br>
+                Number conversion: ${Number(input)}<br>
+                Boolean conversion: ${Boolean(input)}<br>
+                String conversion: ${String(input)}
+            `;
+        }
+
+        // ===========================================
+        // FUNCTIONS & CONDITIONALS
+        // ===========================================
+        function checkAge() {
+            const age = document.getElementById("age-input").value;
+            const result = document.getElementById("age-result");
+            
+            if (age === "") {
+                result.textContent = "Please enter an age";
+                result.className = "output-box error-message";
+                return;
+            }
+            
+            const ageNum = Number(age);
+            if (isNaN(ageNum)) {
+                result.textContent = "Please enter a valid number";
+                result.className = "output-box error-message";
+                return;
+            }
+            
+            if (ageNum >= 18) {
+                result.textContent = "You are an adult";
+                result.className = "output-box success-message";
+            } else {
+                result.textContent = "You are a minor";
+                result.className = "output-box";
+            }
+        }
+
+        function showArrowFunction() {
+            const num1 = Number(document.getElementById("num1").value);
+            const num2 = Number(document.getElementById("num2").value);
+            const output = document.getElementById("arrow-output");
+            
+            if (isNaN(num1) || isNaN(num2)) {
+                output.textContent = "Please enter valid numbers";
+                output.className = "output-box error-message";
+                return;
+            }
+            
+            const multiply = (a, b) => a * b;
+            const result = multiply(num1, num2);
+            output.textContent = `${num1} × ${num2} = ${result}`;
+            output.className = "output-box success-message";
+        }
+
+        // ===========================================
+        // ARRAY METHODS
+        // ===========================================
+        function showMapExample() {
+            const input = document.getElementById("map-input").value;
+            const output = document.getElementById("map-output");
+            
+            if (!input) {
+                output.textContent = "Please enter numbers";
+                output.className = "output-box error-message";
+                return;
+            }
+            
+            const numbers = input.split(",").map(num => Number(num.trim()));
+            if (numbers.some(isNaN)) {
+                output.textContent = "Please enter valid numbers";
+                output.className = "output-box error-message";
+                return;
+            }
+            
+            const doubled = numbers.map(num => num * 2);
+            output.textContent = `Original: [${numbers.join(", ")}]\nDoubled: [${doubled.join(", ")}]`;
+            output.className = "output-box success-message";
+        }
+
+        function showFilterExample() {
+            const input = document.getElementById("filter-input").value;
+            const output = document.getElementById("filter-output");
+            
+            if (!input) {
+                output.textContent = "Please enter numbers";
+                output.className = "output-box error-message";
+                return;
+            }
+            
+            const numbers = input.split(",").map(num => Number(num.trim()));
+            if (numbers.some(isNaN)) {
+                output.textContent = "Please enter valid numbers";
+                output.className = "output-box error-message";
+                return;
+            }
+            
+            const evenNumbers = numbers.filter(num => num % 2 === 0);
+            output.textContent = `Original: [${numbers.join(", ")}]\nEven numbers: [${evenNumbers.join(", ")}]`;
+            output.className = "output-box success-message";
+        }
+
+        function showReduceExample() {
+            const input = document.getElementById("reduce-input").value;
+            const output = document.getElementById("reduce-output");
+            
+            if (!input) {
+                output.textContent = "Please enter numbers";
+                output.className = "output-box error-message";
+                return;
+            }
+            
+            const numbers = input.split(",").map(num => Number(num.trim()));
+            if (numbers.some(isNaN)) {
+                output.textContent = "Please enter valid numbers";
+                output.className = "output-box error-message";
+                return;
+            }
+            
+            const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+            output.textContent = `Numbers: [${numbers.join(", ")}]\nSum: ${sum}`;
+            output.className = "output-box success-message";
+        }
+
+        // ===========================================
+        // DOM MANIPULATION
+        // ===========================================
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+        function addTask() {
+            const input = document.getElementById("task-input");
+            const task = input.value.trim();
+            
+            if (task) {
+                tasks.push(task);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                input.value = '';
+                updateTaskList();
+                updateStorageStatus();
+            }
+        }
+
+        function updateTaskList() {
+            const list = document.getElementById("task-list");
+            list.innerHTML = '';
+            
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.textContent = task;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => deleteTask(index);
+                
+                li.appendChild(deleteBtn);
+                list.appendChild(li);
+            });
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            updateTaskList();
+            updateStorageStatus();
+        }
+
+        function updateStorageStatus() {
+            const status = document.getElementById("storage-status");
+            status.textContent = `Tasks saved: ${tasks.length}`;
+        }
+
+        function updateMousePosition(event) {
+            const box = document.getElementById("mouse-box");
+            const position = document.getElementById("mouse-position");
+            const rect = box.getBoundingClientRect();
+            
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+            position.textContent = `Mouse position: (${Math.round(x)}, ${Math.round(y)})`;
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // ===========================================
+        // ERROR HANDLING
+        // ===========================================
+        function demonstrateErrorHandling() {
+            const input = document.getElementById("error-input").value;
+            const output = document.getElementById("error-output");
+            
+            try {
+                if (!input) {
+                    throw new Error("Please enter a value");
+                }
+                
+                const number = Number(input);
+                if (isNaN(number)) {
+                    throw new Error("Please enter a valid number");
+                }
+                
+                if (number < 0) {
+                    throw new Error("Please enter a positive number");
+                }
+                
+                output.textContent = `Valid number: ${number}`;
+                output.className = "output-box success-message";
+            } catch (error) {
+                output.textContent = `Error: ${error.message}`;
+                output.className = "output-box error-message";
+            }
+        }
+
+        // Initialize task list
+        updateTaskList();
+        updateStorageStatus();
+    </script>
+</body>
+</html> 

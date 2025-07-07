@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List - Student Implementation</title>
+    <style>
+        /* Basic styling to get started */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --error-color: #e74c3c;
+            --warning-color: #f1c40f;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Add your custom styles here */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo List Implementation</h1>
+        
+        <!-- Instructions Section -->
+        <section class="instructions">
+            <h2>Implementation Instructions</h2>
+            <p>Your task is to implement a Todo List application that demonstrates DOM manipulation and event handling. Follow these steps:</p>
+            
+            <ol>
+                <li>Implement the Todo class with required properties</li>
+                <li>Create the StorageService for handling localStorage operations</li>
+                <li>Build the UIManager class for DOM operations</li>
+                <li>Implement event handlers and form validation</li>
+                <li>Add drag and drop functionality</li>
+            </ol>
+
+            <h3>Required Features:</h3>
+            <ul>
+                <li>Add new todos</li>
+                <li>Edit existing todos</li>
+                <li>Delete todos</li>
+                <li>Filter todos by status and priority</li>
+                <li>Sort todos by different criteria</li>
+                <li>Drag and drop reordering</li>
+                <li>Data persistence using localStorage</li>
+            </ul>
+        </section>
+
+        <!-- Todo Form -->
+        <div class="todo-form">
+            <h2>Add New Todo</h2>
+            <form id="todoForm">
+                <!-- TODO: Implement form fields -->
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date</label>
+                    <input type="datetime-local" id="dueDate">
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <select id="priority" required>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <button type="submit">Add Todo</button>
+            </form>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <!-- TODO: Implement filter controls -->
+            <select id="statusFilter">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+            </select>
+            <select id="priorityFilter">
+                <option value="all">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            <select id="sortBy">
+                <option value="createdAt">Sort by Created Date</option>
+                <option value="dueDate">Sort by Due Date</option>
+                <option value="priority">Sort by Priority</option>
+                <option value="title">Sort by Title</option>
+            </select>
+        </div>
+
+        <!-- Todo List -->
+        <div class="todo-list">
+            <h2>Todos</h2>
+            <div id="todoList">
+                <!-- TODO: Implement todo list display -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TODO: Implement Todo class
+        class Todo {
+            constructor({ title, description, dueDate, priority }) {
+                // TODO: Add required properties
+                this.id = Date.now();
+                this.title = title;
+                this.description = description;
+                this.dueDate = dueDate ? new Date(dueDate) : null;
+                this.priority = priority;
+                this.status = 'pending';
+                this.createdAt = new Date();
+                this.updatedAt = new Date();
+            }
+
+            // TODO: Add any required methods
+        }
+
+        // TODO: Implement StorageService class
+        class StorageService {
+            constructor() {
+                this.storageKey = 'todos';
+            }
+
+            async saveTodo(todo) {
+                // TODO: Implement save todo to localStorage
+                // Hint: Use Promise to handle async operation
+            }
+
+            async loadTodos() {
+                // TODO: Implement load todos from localStorage
+                // Hint: Use Promise to handle async operation
+            }
+
+            async updateTodo(todo) {
+                // TODO: Implement update todo in localStorage
+                // Hint: Use Promise to handle async operation
+            }
+
+            async deleteTodo(todoId) {
+                // TODO: Implement delete todo from localStorage
+                // Hint: Use Promise to handle async operation
+            }
+        }
+
+        // TODO: Implement UIManager class
+        class UIManager {
+            constructor() {
+                this.todos = [];
+                this.storageService = new StorageService();
+            }
+
+            async addTodo(todo) {
+                // TODO: Implement add todo
+                // Hint: Use async/await
+            }
+
+            async updateTodo(todo) {
+                // TODO: Implement update todo
+                // Hint: Use async/await
+            }
+
+            async deleteTodo(todoId) {
+                // TODO: Implement delete todo
+                // Hint: Use async/await
+            }
+
+            async filterTodos(status, priority) {
+                // TODO: Implement filter todos
+                // Hint: Return filtered todos based on status and priority
+            }
+
+            async sortTodos(sortBy) {
+                // TODO: Implement sort todos
+                // Hint: Sort todos based on the given criteria
+            }
+
+            renderTodoList(todos) {
+                // TODO: Implement render todo list
+                // Hint: Create and update todo elements in the list
+            }
+        }
+
+        // TODO: Implement event handlers
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize UI manager
+            const uiManager = new UIManager();
+
+            // TODO: Implement form submission handler
+            document.getElementById('todoForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                // TODO: Handle form submission
+                // Hint: Create new todo and add it to the manager
+            });
+
+            // TODO: Implement filter change handlers
+            document.getElementById('statusFilter').addEventListener('change', async (e) => {
+                // TODO: Handle status filter change
+                // Hint: Update todo list based on selected status
+            });
+
+            document.getElementById('priorityFilter').addEventListener('change', async (e) => {
+                // TODO: Handle priority filter change
+                // Hint: Update todo list based on selected priority
+            });
+
+            document.getElementById('sortBy').addEventListener('change', async (e) => {
+                // TODO: Handle sort change
+                // Hint: Update todo list based on selected sort criteria
+            });
+        });
+
+        // TODO: Implement helper functions
+        function showError(message) {
+            // TODO: Implement error display
+            // Hint: Create and show error message element
+        }
+
+        function showSuccess(message) {
+            // TODO: Implement success message display
+            // Hint: Create and show success message element
+        }
+
+        function formatDate(date) {
+            // TODO: Implement date formatting
+            // Hint: Format date for display
+        }
+
+        function validateTodo(todo) {
+            // TODO: Implement todo validation
+            // Hint: Validate todo properties
+        }
+    </script>
+</body>
+</html> 

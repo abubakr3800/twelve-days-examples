@@ -1,0 +1,10 @@
+day10-demo-helper.zip
+│
+├── index.html              # Main demo file with all examples
+├── css/
+│   └── styles.css          # Basic styling for the demo
+├── js/
+│   ├── api.js              # API module example
+│   ├── ui.js               # UI module example
+│   └── main.js             # Main entry point example
+└── README.md               # Simple instructions
