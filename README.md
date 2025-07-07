@@ -131,12 +131,12 @@ This repository contains code examples, daily challenges, and solutions from a m
 
 ## 📘 Folder Structure
 
-📁 dayX-examples/
-├── index.html
-├── enhanced-index.html
-├── enhancements-details.txt
-└── task/
-├── Read-Task-Details.md
-├── student-task.html
-└── solution/
-└── [project-name].html
+## 📁 dayX-examples/
+- ├── index.html
+- ├── enhanced-index.html
+- ├── enhancements-details.txt
+- └── task/
+- ├── Read-Task-Details.md
+- ├── student-task.html
+- └── solution/
+- └── [project-name].html
